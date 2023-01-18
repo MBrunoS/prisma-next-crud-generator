@@ -9,7 +9,7 @@ const { version } = require('../package.json')
 
 generatorHandler({
   onManifest() {
-    logger.info(`${GENERATOR_NAME}:Registered`)
+    logger.info(`${GENERATOR_NAME}:Hooked`)
     return {
       version,
       defaultOutput: '../generated',
