@@ -15,6 +15,6 @@ generatorHandler({
   onGenerate: async (options: GeneratorOptions) => {
     const { models } = options.dmmf.datamodel;
 
-    generatePages(models);
+    await generatePages(models);
   },
 });

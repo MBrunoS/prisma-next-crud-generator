@@ -1,3 +1,5 @@
+import { list } from './views/list';
+import { show } from './views/show';
 import { simpleRoutes, dynamicRoutes } from './api/routes';
 
-export { simpleRoutes, dynamicRoutes };
+export { list, show, simpleRoutes, dynamicRoutes };
