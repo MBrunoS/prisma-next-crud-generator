@@ -1,6 +1,12 @@
 import { DMMF } from '@prisma/generator-helper';
 import { writeFileSafely } from '../utils/writeFileSafely';
-import { simpleRoutes, list, show, dynamicRoutes } from '../templates/';
+import {
+  simpleRoutes,
+  list,
+  show,
+  dynamicRoutes,
+  dashboard,
+} from '../templates/';
 import { lib } from '../templates/api/lib';
 
 export async function generatePages(models: DMMF.Model[]) {
@@ -9,7 +15,7 @@ export async function generatePages(models: DMMF.Model[]) {
 
     const simpleRoutesFile = simpleRoutes(model.name);
     const dynamicRoutesFile = dynamicRoutes(model.name);
-    const indexFile = list(model.name);
+    const indexFile = list(model);
     const showFile = show(model.name, model.fields);
 
     await Promise.all([
@@ -27,5 +33,7 @@ export async function generatePages(models: DMMF.Model[]) {
     ]);
   }
 
-  await writeFileSafely(`./lib/prisma.ts`, lib);
+  const dashboardFile = dashboard(models.map((model) => model.name));
+  writeFileSafely(`./pages/index.tsx`, dashboardFile),
+    await writeFileSafely(`./lib/prisma.ts`, lib);
 }
