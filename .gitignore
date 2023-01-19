@@ -4,3 +4,5 @@ yarn-error.log
 build
 pnpm-debug.log
 .env*
+**/*.db
+.next

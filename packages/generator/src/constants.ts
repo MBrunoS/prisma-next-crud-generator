@@ -1,1 +1,1 @@
-export const GENERATOR_NAME = 'prisma-next-crud-generator'
+export const GENERATOR_NAME = 'Prisma Next CRUD'
