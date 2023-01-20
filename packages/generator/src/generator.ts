@@ -1,6 +1,6 @@
 import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
 import { GENERATOR_NAME } from './constants';
-import { generatePages } from './helpers/generatePages';
+import { generatePagesForModels } from './templates';
 
 const { version } = require('../package.json');
 
@@ -15,6 +15,6 @@ generatorHandler({
   onGenerate: async (options: GeneratorOptions) => {
     const { models } = options.dmmf.datamodel;
 
-    await generatePages(models);
+    await generatePagesForModels(models);
   },
 });

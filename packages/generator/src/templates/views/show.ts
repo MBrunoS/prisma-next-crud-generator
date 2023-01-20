@@ -4,8 +4,6 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase();
 
   const fieldsList = fields.reduce((result, field) => {
-    console.log(field);
-
     if (field.isId || field.relationName) return result;
 
     return (
