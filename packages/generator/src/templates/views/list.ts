@@ -25,6 +25,13 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
   }
 
   export default function ${modelName}Index({ ${modelNameLower}s }: ${modelName}IndexProps) {
+    function handleDelete(id: string) {
+      fetch(\`/api/${modelNameLower}s/\${id}\`, { method: 'DELETE' }).then(() => {
+        alert('${modelName} deleted');
+        location.reload();
+      });
+    }
+
     return (
       <div>
         <h1>All ${modelName}s</h1>
@@ -44,6 +51,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                   <a href={\`${modelNameLower}s/\${${modelNameLower}.id}\`}>
                     Show
                   </a>
+                  <a href="#" onClick={() => handleDelete(${modelNameLower}.id)}>Delete</a>
                 </td>
               </tr>
             ))}
