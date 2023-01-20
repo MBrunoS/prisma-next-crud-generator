@@ -12,8 +12,9 @@ export const simpleRoutes = (modelName: string) => {
         const ${modelNameLower}s = await prisma.${modelNameLower}.findMany();
         return res.status(200).json(${modelNameLower}s);
       } else if (method === 'POST') {
+        const data = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
         const ${modelNameLower} = await prisma.${modelNameLower}.create({
-          data: req.body
+          data
         });
         return res.status(201).json(${modelNameLower});
       }
@@ -42,9 +43,10 @@ export const dynamicRoutes = (modelName: string) => {
         return res.status(200).json(${modelNameLower});
       } else if (method === 'PUT') {
         try {
+          const data = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
           const ${modelNameLower} = await prisma.${modelNameLower}.update({
             where: { id },
-            data: req.body
+            data
           });
           return res.status(201).json(${modelNameLower});
         } catch (error) {

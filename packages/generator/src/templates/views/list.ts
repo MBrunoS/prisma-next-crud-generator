@@ -28,6 +28,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
     return (
       <div>
         <h1>All ${modelName}s</h1>
+        <a href="/${modelNameLower}s/create">Create new ${modelNameLower}</a>
         <table>
           <thead>
             <tr>
