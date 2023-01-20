@@ -1,13 +1,7 @@
 import { DMMF } from '@prisma/generator-helper';
 
-export const create = (modelName: string, fields: DMMF.Field[]) => {
+export const edit = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase();
-
-  const state = fields.reduce((result, field) => {
-    if (field.isId || field.relationName) return result;
-
-    return result + `${field.name}: '',`;
-  }, '');
 
   const fieldsInput = fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result;
@@ -30,33 +24,40 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   import React, { FormEvent, useState } from 'react'
   import { useRouter } from 'next/router';
 
-  export default function ${modelName}Create() {
-    const [formState, setFormState] = useState({ ${state} })
+  export default function ${modelName}Edit({${modelNameLower}}) {
+    const [formState, setFormState] = useState(${modelNameLower});
     const router = useRouter();
 
     function handleSubmit (e: FormEvent<HTMLFormElement>) {
       e.preventDefault();
-      fetch('/api/${modelNameLower}s', {
-        method: 'POST',
+      fetch(\`/api/${modelNameLower}s/\${${modelNameLower}.id}\`, {
+        method: 'PUT',
         body: JSON.stringify(formState)
       })
       .then((res) => {
         if (res.ok) {
-          alert('${modelName} created!')
-          router.push('/${modelNameLower}s')
+          alert('${modelName} updated!');
+          router.push(\`/${modelNameLower}s/\${${modelNameLower}.id}\`)
         }
       });
     }
 
     return (
       <div>
-        <h1>Create ${modelName}</h1>
+        <h1>Edit ${modelName}</h1>
         <form onSubmit={handleSubmit}>
           ${fieldsInput}
-          <button type='submit'>Create</button>
+          <button type='submit'>Update</button>
         </form>
       </div>
     )
+  }
+
+  export async function getServerSideProps({ params }) {
+    const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
+      where: { id: params.id }
+    });
+    return { props: { ${modelNameLower} } }
   }
   `;
 };

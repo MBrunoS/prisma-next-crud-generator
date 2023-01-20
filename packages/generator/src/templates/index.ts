@@ -3,6 +3,7 @@ import { dashboard } from './views/dashboard';
 import { list } from './views/list';
 import { show } from './views/show';
 import { create } from './views/create';
+import { edit } from './views/edit';
 import { simpleRoutes, dynamicRoutes } from './api/routes';
 import { lib } from './api/lib';
 import { writeFileSafely } from '../utils/writeFileSafely';
@@ -23,6 +24,7 @@ export async function generatePagesForModels(models: DMMF.Model[]) {
     const indexFile = list(model);
     const showFile = show(model.name, model.fields);
     const createFile = create(model.name, model.fields);
+    const editFile = edit(model.name, model.fields);
 
     await Promise.all([
       writeFileSafely(
@@ -37,6 +39,7 @@ export async function generatePagesForModels(models: DMMF.Model[]) {
       writeFileSafely(`./pages/${modelNameLower}s/index.tsx`, indexFile),
       writeFileSafely(`./pages/${modelNameLower}s/create.tsx`, createFile),
       writeFileSafely(`./pages/${modelNameLower}s/[id]/index.tsx`, showFile),
+      writeFileSafely(`./pages/${modelNameLower}s/[id]/edit.tsx`, editFile),
     ]);
   }
 }

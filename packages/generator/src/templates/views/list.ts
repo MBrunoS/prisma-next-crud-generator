@@ -51,6 +51,9 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                   <a href={\`${modelNameLower}s/\${${modelNameLower}.id}\`}>
                     Show
                   </a>
+                  <a href={\`${modelNameLower}s/\${${modelNameLower}.id}/edit\`}>
+                    Edit
+                  </a>
                   <a href="#" onClick={() => handleDelete(${modelNameLower}.id)}>Delete</a>
                 </td>
               </tr>
