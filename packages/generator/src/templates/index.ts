@@ -6,6 +6,8 @@ import { create } from './views/create';
 import { edit } from './views/edit';
 import { simpleRoutes, dynamicRoutes } from './api/routes';
 import { lib } from './api/lib';
+import { css } from './globalStyles';
+import { _app } from './_app';
 import { writeFileSafely } from '../utils/writeFileSafely';
 
 export async function generatePagesForModels(models: DMMF.Model[]) {
@@ -40,6 +42,9 @@ export async function generatePagesForModels(models: DMMF.Model[]) {
       writeFileSafely(`./pages/${modelNameLower}s/create.tsx`, createFile),
       writeFileSafely(`./pages/${modelNameLower}s/[id]/index.tsx`, showFile),
       writeFileSafely(`./pages/${modelNameLower}s/[id]/edit.tsx`, editFile),
+
+      writeFileSafely(`./pages/_app.tsx`, _app),
+      writeFileSafely(`./pages/global.css`, css, 'css'),
     ]);
   }
 }

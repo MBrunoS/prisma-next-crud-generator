@@ -1,4 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
+import { capitalize } from '../../utils/capitalize';
 
 export const create = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase();
@@ -6,7 +7,7 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   const state = fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result;
 
-    return result + `${field.name}: '',`;
+    return result + `${field.name}: "",`;
   }, '');
 
   const fieldsInput = fields.reduce((result, field) => {
@@ -15,20 +16,22 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
     return (
       result +
       `<div>
-        <label htmlFor='${field.name}'>${field.name}:</label>
+        <label htmlFor="${field.name}">${capitalize(field.name)}:</label>
         <input
-          type='text'
-          id='${field.name}'
+          type="text"
+          id="${field.name}"
           value={formState.${field.name}}
-          onChange={e => setFormState({ ...formState, ${field.name}: e.target.value })}
+          onChange={e => setFormState({ ...formState, ${
+            field.name
+          }: e.target.value })}
         />
       </div>`
     );
   }, '');
 
   return `
-  import React, { FormEvent, useState } from 'react'
-  import { useRouter } from 'next/router';
+  import React, { FormEvent, useState } from "react"
+  import { useRouter } from "next/router";
 
   export default function ${modelName}Create() {
     const [formState, setFormState] = useState({ ${state} })
@@ -36,26 +39,31 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
 
     function handleSubmit (e: FormEvent<HTMLFormElement>) {
       e.preventDefault();
-      fetch('/api/${modelNameLower}s', {
-        method: 'POST',
+      fetch("/api/${modelNameLower}s", {
+        method: "POST",
         body: JSON.stringify(formState)
       })
       .then((res) => {
         if (res.ok) {
-          alert('${modelName} created!')
-          router.push('/${modelNameLower}s')
+          alert("${modelName} created!")
+          router.push("/${modelNameLower}s")
         }
       });
     }
 
     return (
-      <div>
-        <h1>Create ${modelName}</h1>
+      <>
+        <header>
+          <h1>Create ${modelName}</h1>
+        </header>
         <form onSubmit={handleSubmit}>
           ${fieldsInput}
-          <button type='submit'>Create</button>
+          <footer>
+            <button type="submit" className="primary-btn">Create</button>
+            <a href="/${modelNameLower}s" className="secondary-btn">Return to ${modelNameLower}s list</a>
+          </footer>
         </form>
-      </div>
+      </>
     )
   }
   `;

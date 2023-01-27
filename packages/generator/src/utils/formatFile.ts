@@ -1,6 +1,9 @@
 import prettier from 'prettier';
 
-export const formatFile = (content: string): Promise<string> => {
+export const formatFile = (
+  content: string,
+  fileType = 'typescript',
+): Promise<string> => {
   return new Promise((res, rej) =>
     prettier.resolveConfig(process.cwd()).then((options) => {
       if (!options) {
@@ -10,7 +13,7 @@ export const formatFile = (content: string): Promise<string> => {
       try {
         const formatted = prettier.format(content, {
           ...options,
-          parser: 'typescript',
+          parser: fileType,
         });
 
         res(formatted);

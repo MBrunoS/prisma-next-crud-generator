@@ -4,11 +4,11 @@ export const dashboard = (modelsNames: string[]) => {
     return (
       result +
       `
-      <tr>
-        <td>
+      <div className="row">
+        <div className="cell" data-title="resource">
           <a href="${modelNameLower}s">${modelName}s</a>
-        </td>
-      </tr>
+        </div>
+      </div>
 `
     );
   }, '');
@@ -18,19 +18,17 @@ export const dashboard = (modelsNames: string[]) => {
   
   export default function Dashboard() {
     return (
-      <div>
-        <h1>Dashboard</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Resource</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${resourcesList}
-          </tbody>
-        </table>
-      </div>
+      <>
+        <header>
+          <h1>Dashboard</h1>
+        </header>
+        <div className="table">
+          <div className="row header">
+            <div className="cell">Resource</div>
+          </div>
+          ${resourcesList}
+        </div>
+      </>
     )
   }
   `;

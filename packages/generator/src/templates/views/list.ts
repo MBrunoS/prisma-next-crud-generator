@@ -1,4 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
+import { capitalize } from '../../utils/capitalize';
 
 export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const modelNameLower = modelName.toLowerCase();
@@ -6,13 +7,16 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const tableTitles = fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result;
 
-    return result + `<th>${field.name}</th>`;
+    return result + `<div className="cell">${capitalize(field.name)}</div>`;
   }, '');
 
   const tableData = fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result;
 
-    return result + `<td>{${modelNameLower}.${field.name}}</td>`;
+    return (
+      result +
+      `<div className="cell" data-title="${field.name}">{${modelNameLower}.${field.name}}</div>`
+    );
   }, '');
 
   return `
@@ -33,35 +37,41 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
     }
 
     return (
-      <div>
-        <h1>All ${modelName}s</h1>
-        <a href="/${modelNameLower}s/create">Create new ${modelNameLower}</a>
-        <table>
-          <thead>
-            <tr>
-              ${tableTitles}
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {${modelNameLower}s.map((${modelNameLower}) => (
-              <tr key={${modelNameLower}.id}>
-                ${tableData}
-                <td>
-                  <a href={\`${modelNameLower}s/\${${modelNameLower}.id}\`}>
-                    Show
+      <>
+        <header>
+          <h1>All ${modelName}s</h1>
+          <a href="/${modelNameLower}s/create" className="secondary-btn">
+            + Create new ${modelNameLower}
+          </a>
+        </header>
+        <div className="table">
+          <div className="row header">
+            ${tableTitles}
+            <div className="cell">Actions</div>
+          </div>
+          {${modelNameLower}s.map((${modelNameLower}) => (
+            <div className="row" key={${modelNameLower}.id}>
+              ${tableData}
+              <div className="cell actions" data-title="actions">
+                <div className="action-buttons">
+                  <a href={\`${modelNameLower}s/\${${modelNameLower}.id}\`} className="secondary-btn small">
+                    &#128065; Show
                   </a>
-                  <a href={\`${modelNameLower}s/\${${modelNameLower}.id}/edit\`}>
-                    Edit
+                  <a href={\`${modelNameLower}s/\${${modelNameLower}.id}/edit\`} className="secondary-btn small">
+                    &#9998; Edit
                   </a>
-                  <a href="#" onClick={() => handleDelete(${modelNameLower}.id)}>Delete</a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <a href="/">Return to Dashboard</a>
-      </div>
+                  <a href="#" onClick={() => handleDelete(${modelNameLower}.id)} className="secondary-btn small danger">
+                    &#128465; Delete
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <footer>
+          <a href="/" className="secondary-btn">Return to Dashboard</a>
+        </footer>
+      </>
     )
   }
   

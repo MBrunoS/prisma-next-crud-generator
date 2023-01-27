@@ -1,4 +1,5 @@
 import { DMMF } from '@prisma/generator-helper';
+import { capitalize } from '../../utils/capitalize';
 
 export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase();
@@ -8,7 +9,9 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
     return (
       result +
-      `<p><strong>${field.name}:</strong> {${modelNameLower}.${field.name}}</p>`
+      `<p><strong>${capitalize(field.name)}:</strong> {${modelNameLower}.${
+        field.name
+      }}</p>`
     );
   }, '');
 
@@ -23,11 +26,17 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
   export default function ${modelName}Show({ ${modelNameLower} } : ${modelName}ShowProps) {
     return (
-      <div>
-        <h1>${modelName} {${modelNameLower}.name}</h1>
-        ${fieldsList}
-        <a href="/${modelNameLower}s">Return to ${modelNameLower}s list</a>
-      </div>
+      <>
+        <header>
+          <h1>${modelName} #{${modelNameLower}.id.substr(0,6)}...</h1>
+        </header>
+        <div className="card">
+          ${fieldsList}
+        </div>
+        <footer>
+          <a href="/${modelNameLower}s" className="secondary-btn">Return to ${modelNameLower}s list</a>
+        </footer>
+      </>
     )
   }
 
