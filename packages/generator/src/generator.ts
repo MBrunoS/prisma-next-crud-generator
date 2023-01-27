@@ -8,13 +8,14 @@ generatorHandler({
   onManifest() {
     return {
       version,
-      defaultOutput: '../pages',
+      defaultOutput: '../',
       prettyName: GENERATOR_NAME,
     };
   },
   onGenerate: async (options: GeneratorOptions) => {
     const { models } = options.dmmf.datamodel;
+    const outputFolder = options.generator.output?.value!;
 
-    await generatePagesForModels(models);
+    await generatePagesForModels(models, outputFolder);
   },
 });

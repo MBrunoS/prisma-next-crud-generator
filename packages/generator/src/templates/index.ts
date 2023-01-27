@@ -9,13 +9,20 @@ import { lib } from './api/lib';
 import { css } from './globalStyles';
 import { _app } from './_app';
 import { writeFileSafely } from '../utils/writeFileSafely';
+import path from 'path';
 
-export async function generatePagesForModels(models: DMMF.Model[]) {
+export async function generatePagesForModels(
+  models: DMMF.Model[],
+  output: string,
+) {
   const dashboardFile = dashboard(models.map((model) => model.name));
+  const pagesPath = path.join(output, 'pages');
 
   await Promise.all([
-    writeFileSafely(`./pages/index.tsx`, dashboardFile),
-    writeFileSafely(`./lib/prisma.ts`, lib),
+    writeFileSafely(path.join(pagesPath, 'index.tsx'), dashboardFile),
+    writeFileSafely(path.join(output, 'lib', 'prisma.ts'), lib),
+    writeFileSafely(path.join(pagesPath, '_app.tsx'), _app),
+    writeFileSafely(path.join(pagesPath, 'global.css'), css, 'css'),
   ]);
 
   for (const model of models) {
@@ -30,21 +37,29 @@ export async function generatePagesForModels(models: DMMF.Model[]) {
 
     await Promise.all([
       writeFileSafely(
-        `./pages/api/${modelNameLower}s/index.tsx`,
+        path.join(pagesPath, 'api', `${modelNameLower}s`, 'index.tsx'),
         simpleRoutesFile,
       ),
       writeFileSafely(
-        `./pages/api/${modelNameLower}s/[id].tsx`,
+        path.join(pagesPath, 'api', `${modelNameLower}s`, '[id].tsx'),
         dynamicRoutesFile,
       ),
-
-      writeFileSafely(`./pages/${modelNameLower}s/index.tsx`, indexFile),
-      writeFileSafely(`./pages/${modelNameLower}s/create.tsx`, createFile),
-      writeFileSafely(`./pages/${modelNameLower}s/[id]/index.tsx`, showFile),
-      writeFileSafely(`./pages/${modelNameLower}s/[id]/edit.tsx`, editFile),
-
-      writeFileSafely(`./pages/_app.tsx`, _app),
-      writeFileSafely(`./pages/global.css`, css, 'css'),
+      writeFileSafely(
+        path.join(pagesPath, `${modelNameLower}s`, 'index.tsx'),
+        indexFile,
+      ),
+      writeFileSafely(
+        path.join(pagesPath, `${modelNameLower}s`, 'create.tsx'),
+        createFile,
+      ),
+      writeFileSafely(
+        path.join(pagesPath, `${modelNameLower}s`, '[id]', 'index.tsx'),
+        showFile,
+      ),
+      writeFileSafely(
+        path.join(pagesPath, `${modelNameLower}s`, '[id]', 'edit.tsx'),
+        editFile,
+      ),
     ]);
   }
 }
