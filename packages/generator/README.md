@@ -35,4 +35,10 @@ generator crud {
 }
 ```
 
+Finally, execute the generators:
+
+```sh
+$ npx prisma generate
+```
+
 And that's it! All the API routes and pages will be generated for you. Right now, you can run the development server and you'll have a working app based on the models you specified.

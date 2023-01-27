@@ -1,7 +1,7 @@
 {
   "name": "prisma-next-crud-generator",
   "description": "Prisma generator for scaffolding application based on models",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/generator.js",
   "license": "MIT",
   "bin": {
