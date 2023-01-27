@@ -1,3 +1,3 @@
-# prisma-next-crud-generator
+# Prisma Next CRUD Generator
 
-> This generator was bootstraped using [create-prisma-generator](https://github.com/YassinEldeeb/create-prisma-generator)
+> This is a Prisma Generator for scaffolding NextJS apps. It was bootstraped using [create-prisma-generator](https://github.com/YassinEldeeb/create-prisma-generator)
