@@ -1,5 +1,6 @@
 generator crud {
   provider = "node ../../node_modules/prisma-next-crud-generator"
+  output   = "../src"
 }
 
 generator client {

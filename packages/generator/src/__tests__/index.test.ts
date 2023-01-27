@@ -10,7 +10,7 @@ describe('generatePagesForModels', () => {
 
   beforeAll(async () => {
     const sampleDMMF = await getSampleDMMF();
-    await generatePagesForModels(sampleDMMF.datamodel.models);
+    await generatePagesForModels(sampleDMMF.datamodel.models, '');
   });
 
   afterAll(() => {
