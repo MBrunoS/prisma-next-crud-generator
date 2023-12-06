@@ -16,13 +16,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
     return (
       result +
       `<div>
-        <label htmlFor="${field.name}">${capitalize(field.name)}:</label>
-        <input
-          type="text"
-          id="${field.name}"
-          name="${field.name}"
-          defaultValue={${modelNameLower}.${field.name}}
-        />
+        <TextInput label="${capitalize(field.name)}" name="${field.name}" />
       </div>`
     )
   }, '')
@@ -30,6 +24,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
   return `
   import { redirect } from "next/navigation";
   import { prisma } from '@/lib/prisma';
+  import { TextInput } from '@/components/TextInput';
 
   export default async function ${modelName}Edit({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
