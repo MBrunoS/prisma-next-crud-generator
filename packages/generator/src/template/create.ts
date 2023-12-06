@@ -16,13 +16,19 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
     return (
       result +
       `<div>
-        <TextInput label="${capitalize(field.name)}" name="${field.name}" />
+        <TextInput
+          label="${capitalize(field.name)}"
+          name="${field.name}"
+          className="mb-2"
+          ${field.isRequired ? 'required' : ''}
+        />
       </div>`
     )
   }, '')
 
   return `
   import { redirect } from "next/navigation";
+  import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
   import { TextInput } from '@/components/TextInput';
   import { Heading } from '@/components/Heading';
@@ -45,14 +51,26 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
 
     return (
       <>
-        <header>
+        <header className="mb-4">
           <Heading>Create ${modelName}</Heading>
         </header>
         <form action={handleSubmit}>
           ${fieldsInput}
-          <footer>
-            <button type="submit">Create</button>
-            <a href="/${modelNameLower}s">Return to ${modelNameLower}s list</a>
+
+          <footer className="flex items-center justify-between mt-2">
+            <Link
+              href="/${modelNameLower}s"
+              className="underline text-gray-500"
+            >
+              Return to ${modelNameLower}s list
+            </Link>
+  
+            <button
+              type="submit"
+              className="inline-block rounded-lg bg-indigo-600 hover:bg-indigo-500 px-5 py-3 text-sm font-medium text-white"
+            >
+              Create
+            </button>
           </footer>
         </form>
       </>
