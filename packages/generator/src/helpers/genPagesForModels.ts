@@ -10,6 +10,7 @@ import { lib } from '../template/lib'
 import { textInput } from '../template/components/text-input'
 import { writeFileSafely } from '../utils/writeFileSafely'
 import { sidebar } from '../template/components/sidebar'
+import { heading } from '../template/components/heading'
 
 export async function genPagesForModels(models: DMMF.Model[], output: string) {
   const appPath = path.join(output, 'app')
@@ -22,6 +23,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
     writeFileSafely(path.join(appPath, 'page.tsx'), dashboard),
     writeFileSafely(path.join(componentsPath, 'TextInput.tsx'), textInput),
     writeFileSafely(path.join(componentsPath, 'Sidebar.tsx'), sidebarFile),
+    writeFileSafely(path.join(componentsPath, 'Heading.tsx'), heading),
   ])
 
   for (const model of models) {
