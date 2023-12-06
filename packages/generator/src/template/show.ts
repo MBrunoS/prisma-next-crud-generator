@@ -17,6 +17,7 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
   return `
   import { prisma } from '@/lib/prisma';
+  import { Heading } from '@/components/Heading';
 
   export default async function ${modelName}Show({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
@@ -27,7 +28,7 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
       return (
         <>
           <header>
-            <h1>User not found</h1>
+            <Heading>User not found</Heading>
           </header>
           <footer>
             <a href="/users">
@@ -41,7 +42,7 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
     return (
       <>
         <header>
-          <h1>${modelName} #{${modelNameLower}.id.substring(0,6)}...</h1>
+          <Heading>${modelName} #{${modelNameLower}.id.substring(0,6)}...</Heading>
         </header>
         <div >
           ${fieldsList}

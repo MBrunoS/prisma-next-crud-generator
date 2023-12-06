@@ -25,6 +25,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
   import { redirect } from "next/navigation";
   import { prisma } from '@/lib/prisma';
   import { TextInput } from '@/components/TextInput';
+  import { Heading } from '@/components/Heading';
 
   export default async function ${modelName}Edit({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
@@ -35,7 +36,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
       return (
         <>
           <header>
-            <h1>User not found</h1>
+            <Heading>User not found</Heading>
           </header>
           <footer>
             <a href="/users">
@@ -68,7 +69,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
     return (
       <>
         <header>
-          <h1>Edit ${modelName}</h1>
+          <Heading>Edit ${modelName}</Heading>
         </header>
         <form action={handleSubmit}>
           ${fieldsInput}

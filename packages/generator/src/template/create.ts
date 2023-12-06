@@ -25,6 +25,7 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   import { redirect } from "next/navigation";
   import { prisma } from '@/lib/prisma';
   import { TextInput } from '@/components/TextInput';
+  import { Heading } from '@/components/Heading';
   
   export default function ${modelName}Create() {
 
@@ -45,7 +46,7 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
     return (
       <>
         <header>
-          <h1>Create ${modelName}</h1>
+          <Heading>Create ${modelName}</Heading>
         </header>
         <form action={handleSubmit}>
           ${fieldsInput}
