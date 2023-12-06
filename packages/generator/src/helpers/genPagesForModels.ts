@@ -9,17 +9,19 @@ import { edit } from '../template/edit'
 import { lib } from '../template/lib'
 import { textInput } from '../template/components/text-input'
 import { writeFileSafely } from '../utils/writeFileSafely'
+import { sidebar } from '../template/components/sidebar'
 
 export async function genPagesForModels(models: DMMF.Model[], output: string) {
-  const dashboardFile = dashboard(models.map((model) => model.name))
   const appPath = path.join(output, 'app')
   const componentsPath = path.join(output, 'components')
+  const sidebarFile = sidebar(models.map((model) => model.name))
 
   await Promise.all([
-    writeFileSafely(path.join(appPath, 'page.tsx'), dashboardFile),
     writeFileSafely(path.join(output, 'lib', 'prisma.ts'), lib),
     writeFileSafely(path.join(appPath, 'layout.tsx'), layout),
+    writeFileSafely(path.join(appPath, 'page.tsx'), dashboard),
     writeFileSafely(path.join(componentsPath, 'TextInput.tsx'), textInput),
+    writeFileSafely(path.join(componentsPath, 'Sidebar.tsx'), sidebarFile),
   ])
 
   for (const model of models) {
