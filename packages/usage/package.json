@@ -1,17 +1,31 @@
 {
   "name": "usage",
+  "version": "0.1.0",
   "private": true,
-  "version": "1.0.0",
-  "main": "src/app.js",
-  "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
-    "@prisma/client": "3.7.0"
+    "@prisma/client": "5.6.0",
+    "next": "14.0.3",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@types/node": "16.11.7",
-    "prisma": "3.7.0",
-    "next-crud-generator": "workspace:*",
-    "typescript": "4.5.2"
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.3",
+    "next-crud-generator": "workspace:^",
+    "postcss": "^8.4.31",
+    "prisma": "5.6.0",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5"
   }
 }

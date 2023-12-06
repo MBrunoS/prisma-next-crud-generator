@@ -1,34 +1,19 @@
-generator custom_generator {
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator next_crud_generator {
   provider = "npx next-crud-generator"
-  output   = "../types"
+  output   = "../src"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-}
-
-enum NotificationType {
-  newPosts
-  newComments
-  newFollowers
-  reply
-  heartOnPost
-  heartOnComment
-  heartOnReply
-}
-
-enum Language {
-  Typescript
-  Javascript
-  Rust
-  Go
-  Python
-  Cpp
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
 }
