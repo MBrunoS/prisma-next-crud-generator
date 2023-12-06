@@ -52,6 +52,22 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
 
     return (
       <>
+        <nav aria-label="Breadcrumb" className="my-2">
+          <ol className="flex items-center gap-1 text-sm text-gray-600">
+            <li>
+              <Link href="/" className="block transition hover:text-indigo-600">
+                Dashboard
+              </Link>
+            </li>
+            <li>
+            <ChevronRightIcon className="w-5 h-5" />
+            </li>
+            <li>
+              ${capitalize(modelName)}s
+            </li>
+          </ol>
+        </nav>
+
         <header className="flex justify-between mb-4">
           <Heading>All ${modelName}s</Heading>
           <Link
@@ -108,22 +124,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
             </tbody>
           </table>
         </section>
-
-        <footer className="flex justify-center">
-          <Link href="/" className="hover:text-indigo-600 inline-flex items-center">
-            <ArrowLeftIcon className="w-4 h-4 inline-block mr-2" />
-            Return to Dashboard
-          </Link>
-        </footer>
       </>
-    )
-  }
-
-  const ArrowLeftIcon = ({ className }: { className: string }) => {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
-        <path fillRule="evenodd" d="M7.28 7.72a.75.75 0 010 1.06l-2.47 2.47H21a.75.75 0 010 1.5H4.81l2.47 2.47a.75.75 0 11-1.06 1.06l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0z" clipRule="evenodd" />
-      </svg>
     )
   }
   
@@ -133,6 +134,14 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
         <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
       </svg>
 
+    )
+  }
+
+  const ChevronRightIcon = ({ className }: { className: string }) => {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
+        <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+      </svg>
     )
   }
   `
