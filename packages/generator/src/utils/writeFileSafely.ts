@@ -2,10 +2,14 @@ import fs from 'fs'
 import path from 'path'
 import { formatFile } from './formatFile'
 
-export const writeFileSafely = async (writeLocation: string, content: any) => {
+export const writeFileSafely = async (
+  writeLocation: string,
+  content: any,
+  fileFormat?: string,
+) => {
   fs.mkdirSync(path.dirname(writeLocation), {
     recursive: true,
   })
 
-  fs.writeFileSync(writeLocation, await formatFile(content))
+  fs.writeFileSync(writeLocation, await formatFile(content, fileFormat))
 }

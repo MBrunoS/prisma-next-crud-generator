@@ -1,1 +1,1 @@
-export const GENERATOR_NAME = 'next-crud-generator'
+export const GENERATOR_NAME = 'Next CRUD Generator'

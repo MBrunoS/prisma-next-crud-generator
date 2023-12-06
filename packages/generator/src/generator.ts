@@ -1,9 +1,7 @@
 import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper'
 import { logger } from '@prisma/sdk'
-import path from 'path'
 import { GENERATOR_NAME } from './constants'
-import { genEnum } from './helpers/genEnum'
-import { writeFileSafely } from './utils/writeFileSafely'
+import { genPagesForModels } from './helpers/genPagesForModels'
 
 const { version } = require('../package.json')
 
@@ -17,15 +15,9 @@ generatorHandler({
     }
   },
   onGenerate: async (options: GeneratorOptions) => {
-    options.dmmf.datamodel.enums.forEach(async (enumInfo) => {
-      const tsEnum = genEnum(enumInfo)
+    const { models } = options.dmmf.datamodel
+    const outputFolder = options.generator.output?.value!
 
-      const writeLocation = path.join(
-        options.generator.output?.value!,
-        `${enumInfo.name}.ts`,
-      )
-
-      await writeFileSafely(writeLocation, tsEnum)
-    })
+    await genPagesForModels(models, outputFolder)
   },
 })
