@@ -1,15 +1,18 @@
 export const textInput = `
+import React from "react"
+import { twMerge } from "tailwind-merge"
+
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   name: string
 }
 
-export const TextInput = ({
+export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(({
   label,
   name,
   className,
   ...props
-}: TextInputProps) => {
+}, ref) => {
   return (
     <>
       <label
@@ -22,10 +25,11 @@ export const TextInput = ({
         type='text'
         id={name}
         name={name}
-        className={\`mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm \${className}\`}
+        className={twMerge('mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm', className)}
         {...props}
+        ref={ref}
       />
     </>
   )
-}
+})
 `
