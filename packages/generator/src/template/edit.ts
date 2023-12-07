@@ -16,18 +16,26 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
     return (
       result +
       `<div>
-        <TextInput label="${capitalize(field.name)}" name="${field.name}" />
+        <TextInput
+          label="${capitalize(field.name)}"
+          name="${field.name}"
+          className="mb-2"
+          defaultValue={${modelNameLower}.${field.name}}
+          ${field.isRequired ? 'required' : ''}
+        />
       </div>`
     )
   }, '')
 
   return `
   import { redirect } from "next/navigation";
+  import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
-  import { TextInput } from '@/components/TextInput';
-  import { Heading } from '@/components/Heading';
+  import { TextInput } from '@/components/ui/TextInput';
+  import { Heading } from '@/components/ui/Heading';
+  import { Button } from '@/components/ui/Button';
 
-  export default async function ${modelName}Edit({ params }: { params: { id: string } }) {
+  export default async function ${modelName}EditPage({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
       where: { id: params.id }
     });
@@ -39,9 +47,9 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
             <Heading>User not found</Heading>
           </header>
           <footer>
-            <a href="/users">
+            <Link href="/users">
               Return to users list
-            </a>
+            </Link>
           </footer>
         </>
       )
@@ -68,14 +76,25 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
 
     return (
       <>
-        <header>
+        <header className="mb-4">
           <Heading>Edit ${modelName}</Heading>
         </header>
-        <form action={handleSubmit}>
+        <form action={handleSubmit} className="px-2 max-w-xl">
           ${fieldsInput}
-          <footer>
-            <button type="submit">Update</button>
-            <a href="/${modelNameLower}s">Return to ${modelNameLower}s list</a>
+
+          <footer className="flex items-center justify-between mt-2">
+            <Link
+              href="/${modelNameLower}s"
+              className="underline text-gray-500"
+            >
+              Return to ${modelNameLower}s list
+            </Link>
+  
+            <Button
+              type="submit"
+            >
+              Update
+            </Button>
           </footer>
         </form>
       </>

@@ -9,17 +9,18 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
     return (
       result +
-      `<p><strong>${capitalize(field.name)}:</strong> {${modelNameLower}.${
-        field.name
-      }}</p>`
+      `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${capitalize(
+        field.name,
+      )}:</strong> {${modelNameLower}.${field.name}}</p>`
     )
   }, '')
 
   return `
+  import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
-  import { Heading } from '@/components/Heading';
+  import { Heading } from '@/components/ui/Heading';
 
-  export default async function ${modelName}Show({ params }: { params: { id: string } }) {
+  export default async function ${modelName}Page({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
       where: { id: params.id }
     });
@@ -31,9 +32,12 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
             <Heading>User not found</Heading>
           </header>
           <footer>
-            <a href="/users">
-              Return to users list
-            </a>
+            <Link
+              href="/${modelNameLower}s"
+              className="underline text-gray-500"
+            >
+              Return to ${modelNameLower}s list
+            </Link>
           </footer>
         </>
       )
@@ -41,14 +45,24 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
     return (
       <>
-        <header>
+        <header className="mt-2 mb-4">
           <Heading>${modelName} #{${modelNameLower}.id.substring(0,6)}...</Heading>
         </header>
-        <div >
+
+        <section className="relative overflow-hidden rounded-lg border border-gray-200 p-4 sm:p-6 lg:p-8 max-w-xl mb-4">
+          <span
+            className="absolute inset-x-0 bottom-0 h-21 bg-gradient-to-r from-indigo-300 via-indigo-500 to-indigo-600"
+          ></span>
           ${fieldsList}
-        </div>
+        </section>
+
         <footer>
-          <a href="/${modelNameLower}s">Return to ${modelNameLower}s list</a>
+          <Link
+            href="/${modelNameLower}s"
+            className="underline text-gray-500"
+          >
+            Return to ${modelNameLower}s list
+          </Link>
         </footer>
       </>
     )

@@ -30,10 +30,11 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   import { redirect } from "next/navigation";
   import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
-  import { TextInput } from '@/components/TextInput';
-  import { Heading } from '@/components/Heading';
+  import { TextInput } from '@/components/ui/TextInput';
+  import { Heading } from '@/components/ui/Heading';
+  import { Button } from '@/components/ui/Button';
   
-  export default function ${modelName}Create() {
+  export default function ${modelName}CreatePage() {
 
     const handleSubmit = async (formData: FormData) => {
       'use server';
@@ -54,7 +55,7 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
         <header className="mb-4">
           <Heading>Create ${modelName}</Heading>
         </header>
-        <form action={handleSubmit}>
+        <form action={handleSubmit} className="px-2 max-w-xl">
           ${fieldsInput}
 
           <footer className="flex items-center justify-between mt-2">
@@ -65,12 +66,11 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
               Return to ${modelNameLower}s list
             </Link>
   
-            <button
+            <Button
               type="submit"
-              className="inline-block rounded-lg bg-indigo-600 hover:bg-indigo-500 px-5 py-3 text-sm font-medium text-white"
             >
               Create
-            </button>
+            </Button>
           </footer>
         </form>
       </>
