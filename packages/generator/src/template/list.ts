@@ -39,7 +39,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
     const ${modelNameLower}s = await prisma.${modelNameLower}.findMany();
 
     const breadcrumbs = [
-      { name: 'Dashboard', href: '/dashboard' },
+      { name: 'Dashboard', href: '/' },
       { name: '${modelName}s', href: '#' }
     ]
 
@@ -60,7 +60,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
 
     return (
       <>
-      <Breadcrumbs elements={breadcrumbs} className="my-2" />
+        <Breadcrumbs elements={breadcrumbs} className="my-2" />
 
         <header className="flex justify-between mb-4">
           <Heading>All ${modelName}s</Heading>
@@ -73,7 +73,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
           </Button>
         </header>
 
-        <section className="overflow-x-auto flex-grow">
+        <section className="overflow-x-auto">
           <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
             <thead className="text-left">
               <tr>

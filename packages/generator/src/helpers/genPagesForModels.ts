@@ -22,7 +22,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
   await Promise.all([
     writeFileSafely(path.join(output, 'lib', 'prisma.ts'), lib),
     writeFileSafely(path.join(appPath, 'layout.tsx'), layout),
-    writeFileSafely(path.join(appPath, 'dashboard', 'page.tsx'), dashboard),
+    writeFileSafely(path.join(appPath, 'page.tsx'), dashboard),
     writeFileSafely(path.join(componentsPath, 'Sidebar.tsx'), sidebarFile),
     writeFileSafely(
       path.join(componentsPath, 'ui', 'TextInput.tsx'),
