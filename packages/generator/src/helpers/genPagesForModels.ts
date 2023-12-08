@@ -13,10 +13,12 @@ import { input } from '../template/components/ui/input'
 import { heading } from '../template/components/ui/heading'
 import { button } from '../template/components/ui/button'
 import { breadcrumbs } from '../template/components/ui/breadcrumbs'
+import { actions } from '../template/actions'
 
 export async function genPagesForModels(models: DMMF.Model[], output: string) {
   const appPath = path.join(output, 'app')
   const componentsPath = path.join(output, 'components')
+  const actionsPath = path.join(output, 'actions')
   const sidebarFile = sidebar(models.map((model) => model.name))
 
   await Promise.all([
@@ -40,6 +42,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
     const showFile = show(model.name, model.fields)
     const createFile = create(model.name, model.fields)
     const editFile = edit(model.name, model.fields)
+    const actionsFile = actions(model.name, model.fields)
 
     await Promise.all([
       writeFileSafely(
@@ -57,6 +60,10 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
       writeFileSafely(
         path.join(appPath, `${modelNameLower}s`, '[id]', 'edit', 'page.tsx'),
         editFile,
+      ),
+      writeFileSafely(
+        path.join(actionsPath, `${modelNameLower}.ts`),
+        actionsFile,
       ),
     ])
   }

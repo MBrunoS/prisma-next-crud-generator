@@ -1,6 +1,6 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToTableData } from '../helpers/mapFieldsToTableData'
-import { mapFieldsToTableTitles } from 'src/helpers/mapFieldsToTableTitles'
+import { mapFieldsToTableTitles } from '../helpers/mapFieldsToTableTitles'
 
 export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const modelNameLower = modelName.toLowerCase()
@@ -8,8 +8,8 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const tableData = mapFieldsToTableData(modelNameLower, fields)
 
   return `
-  import { revalidatePath } from 'next/cache'
   import { prisma } from '@/lib/prisma';
+  import { delete${modelName} } from '@/actions/${modelNameLower}';
   import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
@@ -21,21 +21,6 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
       { name: 'Dashboard', href: '/' },
       { name: '${modelName}s', href: '#' }
     ]
-
-    const handleDelete = async (formData: FormData) => {
-      'use server';
-      const id = formData.get('id') as string;
-      try {
-        await prisma.${modelNameLower}.delete({
-          where: { id }
-        });
-      } catch (error) {
-        console.error(error);
-        return { message: 'Unable to delete ${modelNameLower}' };
-      }
-
-      revalidatePath(\`/${modelNameLower}s\`)
-    }
 
     return (
       <>
@@ -73,35 +58,35 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                 <tr key={${modelNameLower}.id}>
                   ${tableData}
                   <td className="inline-flex gap-x-1 px-4 py-2">
-                    <Button
-                      as="a"
-                      href={\`/${modelNameLower}s/\${${modelNameLower}.id}\`}
-                      variant="ghost"
-                      size="sm"
-                      className="font-medium"
-                    >
-                      Show
-                    </Button>
-                    <Button
-                      as="a"
-                      href={\`/${modelNameLower}s/\${${modelNameLower}.id}/edit\`}
-                      variant="ghost"
-                      size="sm"
-                      className="font-medium"
-                    >
-                      Edit
-                    </Button>
-                    <form action={handleDelete} className="inline-block">
-                      <input type="hidden" name="id" value={${modelNameLower}.id} />
                       <Button
-                        type="submit"
+                        as="a"
+                        href={\`/${modelNameLower}s/\${${modelNameLower}.id}\`}
                         variant="ghost"
                         size="sm"
-                        className="font-medium text-red-600 hover:bg-red-100 disabled:bg-red-100"
+                        className="font-medium"
                       >
-                        Delete
+                        Show
                       </Button>
-                    </form>
+                      <Button
+                        as="a"
+                        href={\`/${modelNameLower}s/\${${modelNameLower}.id}/edit\`}
+                        variant="ghost"
+                        size="sm"
+                        className="font-medium"
+                      >
+                        Edit
+                      </Button>
+                      <form action={delete${modelName}} className="inline-block">
+                        <input type="hidden" name="id" value={${modelNameLower}.id} />
+                        <Button
+                          type="submit"
+                          variant="ghost"
+                          size="sm"
+                          className="font-medium text-red-600 hover:bg-red-100 disabled:bg-red-100"
+                        >
+                          Delete
+                        </Button>
+                      </form>
                   </td>
                 </tr>
               ))}

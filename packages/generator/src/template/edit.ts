@@ -1,16 +1,14 @@
 import { DMMF } from '@prisma/generator-helper'
-import { mapFieldsToFormData } from '../helpers/mapFieldsToFormData'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
 
 export const edit = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
-  const formDataFields = mapFieldsToFormData(fields)
   const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower)
 
   return `
-  import { redirect } from "next/navigation";
   import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
+  import { edit${modelName} } from '@/actions/${modelNameLower}';
   import { Input } from '@/components/ui/Input';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
@@ -35,32 +33,15 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
       )
     }
 
-    const handleSubmit = async (formData: FormData) => {
-      'use server';
-      
-      try {
-        const data = {
-          ${formDataFields}
-        }
-
-        await prisma.${modelNameLower}.update({
-          where: { id: ${modelNameLower}.id },
-          data,
-        })
-      } catch (error) {
-        return { message: error }
-      }
-
-      redirect(\`/${modelNameLower}s/\${${modelNameLower}.id}\`)
-    }
-
     return (
       <>
         <header className="mb-4">
           <Heading>Edit ${modelName}</Heading>
         </header>
-        <form action={handleSubmit} className="px-2 max-w-xl">
+        <form action={edit${modelName}} className="px-2 max-w-xl">
           ${fieldsInput}
+
+          <input type="hidden" name="id" value={${modelNameLower}.id} />
 
           <footer className="flex items-center justify-between mt-2">
             <Link
