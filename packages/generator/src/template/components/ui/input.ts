@@ -26,6 +26,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           id={name}
           name={name}
+          required={required}
           className={twMerge(
             'mt-1 border-gray-200 shadow-sm sm:text-sm',
             type !== 'radio' && type !== 'checkbox' ? 'block w-full rounded-md' : 'inline-block rounded-full',

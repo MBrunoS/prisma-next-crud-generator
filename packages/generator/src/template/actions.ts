@@ -6,6 +6,8 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
   const modelNameLowerPlural = pluralize(modelNameLower)
   const formDataFields = mapFieldsToFormData(fields)
+  const idField = fields.find((field) => field.name === 'id')
+  const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
   return `
   'use server';
@@ -17,7 +19,6 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
     const data = {
       ${formDataFields}
     }
-    console.log(formData.get('published'), typeof formData.get('published'))
     
     const ${modelNameLower} = await prisma.${modelNameLower}.create({ data });
 
@@ -34,7 +35,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       }
 
       await prisma.${modelNameLower}.update({
-        where: { id },
+        where: { ${isIdNumber ? 'id: Number(id)' : 'id'} },
         data,
       })
     } catch (error) {
@@ -49,7 +50,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
     const id = formData.get('id') as string;
     try {
       await prisma.${modelNameLower}.delete({
-        where: { id }
+        where: { ${isIdNumber ? 'id: Number(id)' : 'id'} },
       });
     } catch (error) {
       console.error('DELETE ACTION ERROR:', error);

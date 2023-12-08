@@ -6,6 +6,8 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
   const modelNameLowerPlural = pluralize(modelNameLower)
   const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower)
+  const idField = fields.find((field) => field.name === 'id')
+  const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
   return `
   import Link from 'next/link';
@@ -17,7 +19,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
 
   export default async function ${modelName}EditPage({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
-      where: { id: params.id }
+      where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} }
     });
     
     if (!${modelNameLower}) {

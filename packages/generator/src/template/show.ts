@@ -6,6 +6,8 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
   const modelNameLowerPlural = pluralize(modelNameLower)
   const fieldsList = mapFieldsToShowData(modelNameLower, fields)
+  const idField = fields.find((field) => field.name === 'id')
+  const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
   return `
   import Link from 'next/link';
@@ -14,7 +16,7 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
   export default async function ${modelName}Page({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
-      where: { id: params.id }
+      where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} }
     });
     
     if (!${modelNameLower}) {
@@ -38,7 +40,11 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
     return (
       <>
         <header className="mt-2 mb-4">
-          <Heading>${modelName} #{${modelNameLower}.id.substring(0,6)}...</Heading>
+          <Heading>${modelName} #${
+    isIdNumber
+      ? `{${modelNameLower}.id}`
+      : `{${modelNameLower}.id.substring(0,6)}...`
+  }</Heading>
         </header>
 
         <section className="relative overflow-hidden rounded-lg border border-gray-200 p-4 sm:p-6 lg:p-8 max-w-xl mb-4">
