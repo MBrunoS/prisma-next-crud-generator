@@ -23,14 +23,14 @@
     "@prisma/internals": "^5.6.0",
     "@types/pluralize": "^0.0.33",
     "pluralize": "^8.0.0",
-    "prettier": "2.5.1"
+    "prettier": "3.1.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@types/jest": "27.0.3",
     "@types/node": "17.0.21",
-    "@types/prettier": "2.4.2",
+    "@types/prettier": "3.0.0",
     "jest": "27.4.7",
     "prisma": "^5.6.0",
     "semantic-release": "^18.0.1",
