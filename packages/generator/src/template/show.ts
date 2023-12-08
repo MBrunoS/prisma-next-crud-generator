@@ -15,11 +15,11 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
       where: { id: params.id }
     });
     
-    if (!user) {
+    if (!${modelNameLower}) {
       return (
         <>
           <header>
-            <Heading>User not found</Heading>
+            <Heading>${modelName} not found</Heading>
           </header>
           <footer>
             <Link

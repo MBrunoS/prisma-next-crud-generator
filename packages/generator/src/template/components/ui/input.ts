@@ -8,7 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, name, className, required, ...props }, ref) => {
+  ({ label, name, type, className, required, ...props }, ref) => {
     return (
       <>
         <label
@@ -23,10 +23,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </label>
         <input
+          type={type}
           id={name}
           name={name}
           className={twMerge(
-            'mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm',
+            'mt-1 border-gray-200 shadow-sm sm:text-sm',
+            type !== 'radio' && type !== 'checkbox' ? 'block w-full rounded-md' : 'inline-block rounded-full',
             className,
           )}
           {...props}

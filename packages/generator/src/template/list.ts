@@ -57,7 +57,8 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
               {${modelNameLower}s.map((${modelNameLower}) => (
                 <tr key={${modelNameLower}.id}>
                   ${tableData}
-                  <td className="inline-flex gap-x-1 px-4 py-2">
+                  <td className="px-4 py-2">
+                    <div className="flex gap-x-1 h-full justify-center">
                       <Button
                         as="a"
                         href={\`/${modelNameLower}s/\${${modelNameLower}.id}\`}
@@ -87,6 +88,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                           Delete
                         </Button>
                       </form>
+                    </div>
                   </td>
                 </tr>
               ))}
