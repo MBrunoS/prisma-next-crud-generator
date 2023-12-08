@@ -1,5 +1,6 @@
 import { DMMF } from '@prisma/generator-helper'
 import { fieldToCapitalizedLabel } from '../utils/strings'
+import { IGNORED_FIELDS } from '../utils/ignoredFields'
 
 const typeMap = {
   String: 'text',
@@ -13,13 +14,15 @@ export function mapFieldsToFormInputs(
   fields: DMMF.Field[],
   modelNameToEdit?: string,
 ) {
-  return fields.reduce((result, field) => {
-    if (field.isId || field.relationName) return result
+  return fields
+    .filter((field) => !IGNORED_FIELDS.includes(field.name))
+    .reduce((result, field) => {
+      if (field.relationName) return result
 
-    if (field.type === 'Boolean') {
-      return (
-        result +
-        `<div>
+      if (field.type === 'Boolean') {
+        return (
+          result +
+          `<div>
           <Input
             type="checkbox"
             label="${fieldToCapitalizedLabel(field.name)}"
@@ -33,13 +36,13 @@ export function mapFieldsToFormInputs(
             ${field.isRequired ? 'required' : ''}
           />
         </div>`
-      )
-    }
+        )
+      }
 
-    if (field.type === 'DateTime') {
-      return (
-        result +
-        `<div>
+      if (field.type === 'DateTime') {
+        return (
+          result +
+          `<div>
           <Input
             type="datetime-local"
             label="${fieldToCapitalizedLabel(field.name)}"
@@ -53,16 +56,16 @@ export function mapFieldsToFormInputs(
             ${field.isRequired ? 'required' : ''}
           />
         </div>`
-      )
-    }
+        )
+      }
 
-    const type = typeMap[field.type as keyof typeof typeMap]
+      const type = typeMap[field.type as keyof typeof typeMap]
 
-    if (!type) return result
+      if (!type) return result
 
-    return (
-      result +
-      `<div>
+      return (
+        result +
+        `<div>
         <Input
           type="${type}"
           label="${fieldToCapitalizedLabel(field.name)}"
@@ -76,6 +79,6 @@ export function mapFieldsToFormInputs(
           ${field.isRequired ? 'required' : ''}
         />
       </div>`
-    )
-  }, '')
+      )
+    }, '')
 }

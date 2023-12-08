@@ -1,0 +1,1 @@
+export const IGNORED_FIELDS = ['id', 'createdAt', 'updatedAt', 'deletedAt']
