@@ -9,7 +9,7 @@ import { edit } from '../template/edit'
 import { lib } from '../template/lib'
 import { writeFileSafely } from '../utils/writeFileSafely'
 import { sidebar } from '../template/components/sidebar'
-import { textInput } from '../template/components/ui/text-input'
+import { input } from '../template/components/ui/input'
 import { heading } from '../template/components/ui/heading'
 import { button } from '../template/components/ui/button'
 import { breadcrumbs } from '../template/components/ui/breadcrumbs'
@@ -24,10 +24,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
     writeFileSafely(path.join(appPath, 'layout.tsx'), layout),
     writeFileSafely(path.join(appPath, 'page.tsx'), dashboard),
     writeFileSafely(path.join(componentsPath, 'Sidebar.tsx'), sidebarFile),
-    writeFileSafely(
-      path.join(componentsPath, 'ui', 'TextInput.tsx'),
-      textInput,
-    ),
+    writeFileSafely(path.join(componentsPath, 'ui', 'Input.tsx'), input),
     writeFileSafely(path.join(componentsPath, 'ui', 'Heading.tsx'), heading),
     writeFileSafely(path.join(componentsPath, 'ui', 'Button.tsx'), button),
     writeFileSafely(
