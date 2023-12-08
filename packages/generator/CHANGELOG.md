@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/MBrunoS/prisma-next-crud-generator//compare/v1.1.0...v1.2.0) (2023-12-08)
+
+
+### Bug Fixes
+
+* convert id type and add required in inputs ([35e490f](https://github.com/MBrunoS/prisma-next-crud-generator//commit/35e490fbc15aff233c0e95fdebc369aa3da0cbdf))
+
+
+### Features
+
+* add ignoredFields utility ([adc536b](https://github.com/MBrunoS/prisma-next-crud-generator//commit/adc536b58b4be4e97d860196f7d5a4b80b4d60d8))
+
 # [1.1.0](https://github.com/MBrunoS/prisma-next-crud-generator//compare/v1.0.0...v1.1.0) (2023-12-08)
 
 
