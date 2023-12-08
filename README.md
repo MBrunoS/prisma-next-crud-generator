@@ -63,6 +63,12 @@ npm run dev
 
 ### 5. Open `http://localhost:3000`
 
+And you should see something like this:
+
+![Demo of the generated app](/assets/demo.gif)
+
+That's it! You can now start playing with the generated app.
+
 ## How to contribute?
 
 1. Clone the repo
