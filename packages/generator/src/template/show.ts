@@ -1,19 +1,9 @@
 import { DMMF } from '@prisma/generator-helper'
-import { capitalize } from '../utils/capitalize'
+import { mapFieldsToShowData } from '../helpers/mapFieldsToShowData'
 
 export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
-
-  const fieldsList = fields.reduce((result, field) => {
-    if (field.isId || field.relationName) return result
-
-    return (
-      result +
-      `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${capitalize(
-        field.name,
-      )}:</strong> {${modelNameLower}.${field.name}}</p>`
-    )
-  }, '')
+  const fieldsList = mapFieldsToShowData(modelNameLower, fields)
 
   return `
   import Link from 'next/link';

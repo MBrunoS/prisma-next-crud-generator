@@ -1,35 +1,14 @@
 import { DMMF } from '@prisma/generator-helper'
-import { capitalize } from '../utils/capitalize'
+import { mapFieldsToTableData } from '../helpers/mapFieldsToTableData'
+import { mapFieldsToTableTitles } from 'src/helpers/mapFieldsToTableTitles'
 
 export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const modelNameLower = modelName.toLowerCase()
-
-  const tableTitles = fields.reduce((result, field) => {
-    if (field.isId || field.relationName) return result
-
-    return (
-      result +
-      `<th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-        ${capitalize(field.name)}
-      </th>`
-    )
-  }, '')
-
-  const tableData = fields.reduce((result, field) => {
-    if (field.isId || field.relationName) return result
-
-    return (
-      result +
-      `<td className="whitespace-nowrap px-4 py-2 text-gray-700">
-        {${modelNameLower}.${field.name}}
-      </td>
-      `
-    )
-  }, '')
+  const tableTitles = mapFieldsToTableTitles(fields)
+  const tableData = mapFieldsToTableData(modelNameLower, fields)
 
   return `
   import { revalidatePath } from 'next/cache'
-  import Link from 'next/link'
   import { prisma } from '@/lib/prisma';
   import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
   import { Heading } from '@/components/ui/Heading';
