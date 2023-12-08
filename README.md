@@ -19,17 +19,35 @@
 npm i -D prisma-next-crud-generator
 ```
 
-### 2. Add the generator to your Prisma schema
+### 2. Add the generator to your Prisma schema and add some models
 
 ```prisma
 generator client {
   provider = "prisma-client-js"
 }
 
-generator next-crud {
+generator next_crud {
   provider = "prisma-next-crud-generator"
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id                    String   @id @default(uuid())
+  name                  String
+  price                 Float
+  reallyLongDescription String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
 ```
+**Note:** `id`, `createdAt`, `updatedAt` and `deletedAt` fields are ignored by the generator in list pages and form inputs. The `id` is used in the `show` and `edit` pages, supporting Int, BigInt and String types.
 
 ### 3. Run `npx prisma generate`
 
