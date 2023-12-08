@@ -2,7 +2,6 @@ import { DMMF } from '@prisma/generator-helper'
 
 const typeMap = {
   String: 'string',
-  Boolean: 'boolean',
   Int: 'number',
   BigInt: 'number',
   Float: 'number',
@@ -12,6 +11,10 @@ const typeMap = {
 export function mapFieldsToFormData(fields: DMMF.Field[]) {
   return fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result
+
+    if (field.type === 'Boolean') {
+      return result + `${field.name}: formData.get('${field.name}') === 'on',\n`
+    }
 
     if (field.type === 'DateTime') {
       return (

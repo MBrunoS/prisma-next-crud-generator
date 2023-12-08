@@ -3,7 +3,6 @@ import { capitalize } from '../utils/capitalize'
 
 const typeMap = {
   String: 'text',
-  Boolean: 'checkbox',
   Int: 'number',
   BigInt: 'number',
   Float: 'number',
@@ -12,10 +11,30 @@ const typeMap = {
 
 export function mapFieldsToFormInputs(
   fields: DMMF.Field[],
-  modelName?: string,
+  modelNameToEdit?: string,
 ) {
   return fields.reduce((result, field) => {
     if (field.isId || field.relationName) return result
+
+    if (field.type === 'Boolean') {
+      return (
+        result +
+        `<div>
+          <Input
+            type="checkbox"
+            label="${capitalize(field.name)}"
+            name="${field.name}"
+            className="mb-2"
+            ${
+              !!modelNameToEdit
+                ? `defaultChecked={${modelNameToEdit}.${field.name}}`
+                : ''
+            }
+            ${field.isRequired ? 'required' : ''}
+          />
+        </div>`
+      )
+    }
 
     if (field.type === 'DateTime') {
       return (
@@ -27,8 +46,8 @@ export function mapFieldsToFormInputs(
             name="${field.name}"
             className="mb-2"
             ${
-              !!modelName
-                ? `defaultValue={new Date(${modelName}.${field.name}).toISOString().slice(0,16)}`
+              !!modelNameToEdit
+                ? `defaultValue={new Date(${modelNameToEdit}.${field.name}).toISOString().slice(0,16)}`
                 : ''
             }
             ${field.isRequired ? 'required' : ''}
@@ -49,7 +68,11 @@ export function mapFieldsToFormInputs(
           label="${capitalize(field.name)}"
           name="${field.name}"
           className="mb-2"
-          ${!!modelName ? `defaultValue={${modelName}.${field.name}}` : ''}
+          ${
+            !!modelNameToEdit
+              ? `defaultValue={${modelNameToEdit}.${field.name}}`
+              : ''
+          }
           ${field.isRequired ? 'required' : ''}
         />
       </div>`
