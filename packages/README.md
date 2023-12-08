@@ -47,7 +47,7 @@ npm run dev
 
 ## How to contribute?
 
-1. Clone the repo
+1. Go to the [repository](https://github.com/MBrunoS/prisma-next-crud-generator) and clone it
 2. Enter the generator directory: `cd packages/generator`
 3. Run `npm run dev` to start the generator in watch mode
 4. Open another terminal and enter the example directory: `cd packages/usage`
