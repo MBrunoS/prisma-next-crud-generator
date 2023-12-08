@@ -1,8 +1,10 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToShowData } from '../helpers/mapFieldsToShowData'
+import { pluralize } from '../utils/strings'
 
 export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
+  const modelNameLowerPlural = pluralize(modelNameLower)
   const fieldsList = mapFieldsToShowData(modelNameLower, fields)
 
   return `
@@ -23,10 +25,10 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
           </header>
           <footer>
             <Link
-              href="/${modelNameLower}s"
+              href="/${modelNameLowerPlural}"
               className="underline text-gray-500"
             >
-              Return to ${modelNameLower}s list
+              Return to ${modelNameLowerPlural} list
             </Link>
           </footer>
         </>
@@ -48,10 +50,10 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
         <footer>
           <Link
-            href="/${modelNameLower}s"
+            href="/${modelNameLowerPlural}"
             className="underline text-gray-500"
           >
-            Return to ${modelNameLower}s list
+            Return to ${modelNameLowerPlural} list
           </Link>
         </footer>
       </>

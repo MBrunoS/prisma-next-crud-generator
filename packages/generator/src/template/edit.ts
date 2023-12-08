@@ -1,8 +1,10 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
+import { pluralize } from '../utils/strings'
 
 export const edit = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
+  const modelNameLowerPlural = pluralize(modelNameLower)
   const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower)
 
   return `
@@ -25,8 +27,8 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
             <Heading>${modelName} not found</Heading>
           </header>
           <footer>
-            <Link href="/${modelNameLower}s">
-              Return to ${modelNameLower}s list
+            <Link href="/${modelNameLowerPlural}">
+              Return to ${modelNameLowerPlural} list
             </Link>
           </footer>
         </>
@@ -45,10 +47,10 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
 
           <footer className="flex items-center justify-between mt-2">
             <Link
-              href="/${modelNameLower}s"
+              href="/${modelNameLowerPlural}"
               className="underline text-gray-500"
             >
-              Return to ${modelNameLower}s list
+              Return to ${modelNameLowerPlural} list
             </Link>
   
             <Button

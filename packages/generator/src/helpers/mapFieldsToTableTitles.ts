@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper'
-import { capitalize } from '../utils/capitalize'
+import { fieldToCapitalizedLabel } from '../utils/strings'
 
 export function mapFieldsToTableTitles(fields: DMMF.Field[]) {
   return fields.reduce((result, field) => {
@@ -8,7 +8,7 @@ export function mapFieldsToTableTitles(fields: DMMF.Field[]) {
     return (
       result +
       `<th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-        ${capitalize(field.name)}
+        ${fieldToCapitalizedLabel(field.name)}
       </th>`
     )
   }, '')

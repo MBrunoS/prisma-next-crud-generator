@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper'
-import { capitalize } from '../utils/capitalize'
+import { fieldToCapitalizedLabel } from '../utils/strings'
 
 export function mapFieldsToShowData(modelName: string, fields: DMMF.Field[]) {
   return fields.reduce((result, field) => {
@@ -8,7 +8,7 @@ export function mapFieldsToShowData(modelName: string, fields: DMMF.Field[]) {
     if (field.type === 'Boolean') {
       return (
         result +
-        `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${capitalize(
+        `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${fieldToCapitalizedLabel(
           field.name,
         )}:</strong> {${modelName}.${field.name} ? 'Yes' : 'No'}</p>`
       )
@@ -17,7 +17,7 @@ export function mapFieldsToShowData(modelName: string, fields: DMMF.Field[]) {
     if (field.type === 'DateTime') {
       return (
         result +
-        `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${capitalize(
+        `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${fieldToCapitalizedLabel(
           field.name,
         )}:</strong> {new Date(${modelName}.${
           field.name
@@ -27,7 +27,7 @@ export function mapFieldsToShowData(modelName: string, fields: DMMF.Field[]) {
 
     return (
       result +
-      `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${capitalize(
+      `<p className="text-gray-700 mb-4 last:mb-0"><strong className="text-gray-900">${fieldToCapitalizedLabel(
         field.name,
       )}:</strong> {${modelName}.${field.name}}</p>`
     )

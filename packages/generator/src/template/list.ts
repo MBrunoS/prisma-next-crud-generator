@@ -1,9 +1,12 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToTableData } from '../helpers/mapFieldsToTableData'
 import { mapFieldsToTableTitles } from '../helpers/mapFieldsToTableTitles'
+import { pluralize } from '../utils/strings'
 
 export const list = ({ name: modelName, fields }: DMMF.Model) => {
   const modelNameLower = modelName.toLowerCase()
+  const modelNamePlural = pluralize(modelName)
+  const modelNameLowerPlural = pluralize(modelNameLower)
   const tableTitles = mapFieldsToTableTitles(fields)
   const tableData = mapFieldsToTableData(modelNameLower, fields)
 
@@ -14,12 +17,12 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
 
-  export default async function ${modelName}sListPage() {
-    const ${modelNameLower}s = await prisma.${modelNameLower}.findMany();
+  export default async function ${modelNamePlural}ListPage() {
+    const ${modelNameLowerPlural} = await prisma.${modelNameLower}.findMany();
 
     const breadcrumbs = [
       { name: 'Dashboard', href: '/' },
-      { name: '${modelName}s', href: '#' }
+      { name: '${modelNamePlural}', href: '#' }
     ]
 
     return (
@@ -27,10 +30,10 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
         <Breadcrumbs elements={breadcrumbs} className="my-2" />
 
         <header className="flex justify-between mb-4">
-          <Heading>All ${modelName}s</Heading>
+          <Heading>All ${modelNamePlural}</Heading>
           <Button
             as="a"
-            href="/${modelNameLower}s/create"
+            href="/${modelNameLowerPlural}/create"
             className="font-medium"
           >
            New ${modelNameLower}
@@ -46,22 +49,22 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {${modelNameLower}s.length === 0 && (
+              {${modelNameLowerPlural}.length === 0 && (
                 <tr>
                   <td colSpan={${fields.length}} className="text-center text-gray-500 py-4">
-                    No ${modelNameLower}s found
+                    No ${modelNameLowerPlural} found
                   </td>
                 </tr>
               )}
 
-              {${modelNameLower}s.map((${modelNameLower}) => (
+              {${modelNameLowerPlural}.map((${modelNameLower}) => (
                 <tr key={${modelNameLower}.id}>
                   ${tableData}
                   <td className="px-4 py-2">
                     <div className="flex gap-x-1 h-full justify-center">
                       <Button
                         as="a"
-                        href={\`/${modelNameLower}s/\${${modelNameLower}.id}\`}
+                        href={\`/${modelNameLowerPlural}/\${${modelNameLower}.id}\`}
                         variant="ghost"
                         size="sm"
                         className="font-medium"
@@ -70,7 +73,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                       </Button>
                       <Button
                         as="a"
-                        href={\`/${modelNameLower}s/\${${modelNameLower}.id}/edit\`}
+                        href={\`/${modelNameLowerPlural}/\${${modelNameLower}.id}/edit\`}
                         variant="ghost"
                         size="sm"
                         className="font-medium"

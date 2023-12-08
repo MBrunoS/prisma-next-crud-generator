@@ -1,8 +1,10 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormData } from '../helpers/mapFieldsToFormData'
+import { pluralize } from '../utils/strings'
 
 export const actions = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
+  const modelNameLowerPlural = pluralize(modelNameLower)
   const formDataFields = mapFieldsToFormData(fields)
 
   return `
@@ -20,7 +22,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
     const ${modelNameLower} = await prisma.${modelNameLower}.create({ data });
 
     if (${modelNameLower}) {
-      redirect(\`/${modelNameLower}s/\${${modelNameLower}.id}\`)
+      redirect(\`/${modelNameLowerPlural}/\${${modelNameLower}.id}\`)
     }
   }
 
@@ -40,7 +42,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       return { message: error }
     }
 
-    redirect(\`/${modelNameLower}s/\${id}\`)
+    redirect(\`/${modelNameLowerPlural}/\${id}\`)
   }
 
   export async function delete${modelName} (formData: FormData) {
@@ -54,7 +56,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       return { message: 'Unable to delete ${modelNameLower}' };
     }
 
-    revalidatePath(\`/${modelNameLower}s\`)
+    revalidatePath(\`/${modelNameLowerPlural}\`)
   }
   `
 }

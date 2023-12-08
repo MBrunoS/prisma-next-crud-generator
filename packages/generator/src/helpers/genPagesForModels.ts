@@ -14,6 +14,7 @@ import { heading } from '../template/components/ui/heading'
 import { button } from '../template/components/ui/button'
 import { breadcrumbs } from '../template/components/ui/breadcrumbs'
 import { actions } from '../template/actions'
+import { pluralize } from '../utils/strings'
 
 export async function genPagesForModels(models: DMMF.Model[], output: string) {
   const appPath = path.join(output, 'app')
@@ -37,6 +38,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
 
   for (const model of models) {
     const modelNameLower = model.name.toLowerCase()
+    const modelNameLowerPlural = pluralize(modelNameLower)
 
     const indexFile = list(model)
     const showFile = show(model.name, model.fields)
@@ -46,19 +48,25 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
 
     await Promise.all([
       writeFileSafely(
-        path.join(appPath, `${modelNameLower}s`, 'page.tsx'),
+        path.join(appPath, `${modelNameLowerPlural}`, 'page.tsx'),
         indexFile,
       ),
       writeFileSafely(
-        path.join(appPath, `${modelNameLower}s`, 'create', 'page.tsx'),
+        path.join(appPath, `${modelNameLowerPlural}`, 'create', 'page.tsx'),
         createFile,
       ),
       writeFileSafely(
-        path.join(appPath, `${modelNameLower}s`, '[id]', 'page.tsx'),
+        path.join(appPath, `${modelNameLowerPlural}`, '[id]', 'page.tsx'),
         showFile,
       ),
       writeFileSafely(
-        path.join(appPath, `${modelNameLower}s`, '[id]', 'edit', 'page.tsx'),
+        path.join(
+          appPath,
+          `${modelNameLowerPlural}`,
+          '[id]',
+          'edit',
+          'page.tsx',
+        ),
         editFile,
       ),
       writeFileSafely(

@@ -1,5 +1,5 @@
 import { DMMF } from '@prisma/generator-helper'
-import { capitalize } from '../utils/capitalize'
+import { fieldToCapitalizedLabel } from '../utils/strings'
 
 const typeMap = {
   String: 'text',
@@ -22,7 +22,7 @@ export function mapFieldsToFormInputs(
         `<div>
           <Input
             type="checkbox"
-            label="${capitalize(field.name)}"
+            label="${fieldToCapitalizedLabel(field.name)}"
             name="${field.name}"
             className="mb-2"
             ${
@@ -42,7 +42,7 @@ export function mapFieldsToFormInputs(
         `<div>
           <Input
             type="datetime-local"
-            label="${capitalize(field.name)}"
+            label="${fieldToCapitalizedLabel(field.name)}"
             name="${field.name}"
             className="mb-2"
             ${
@@ -65,7 +65,7 @@ export function mapFieldsToFormInputs(
       `<div>
         <Input
           type="${type}"
-          label="${capitalize(field.name)}"
+          label="${fieldToCapitalizedLabel(field.name)}"
           name="${field.name}"
           className="mb-2"
           ${
