@@ -1,84 +1,69 @@
 import { DMMF } from '@prisma/generator-helper'
-import { fieldToCapitalizedLabel } from '../utils/strings'
 import { IGNORED_FIELDS } from '../utils/ignoredFields'
+import { generateRelationField } from './generateRelationField'
+import { generateScalarField } from './generateScalarField'
 
-const typeMap = {
-  String: 'text',
-  Int: 'number',
-  BigInt: 'number',
-  Float: 'number',
-  Decimal: 'number',
+interface FieldStrategy {
+  shouldProcess(field: DMMF.Field, fields: DMMF.Field[]): boolean
+  process(
+    field: DMMF.Field,
+    fields: DMMF.Field[],
+    modelName?: string,
+    isEditForm?: boolean,
+  ): string
+}
+
+class ObjectFieldStrategy implements FieldStrategy {
+  shouldProcess(field: DMMF.Field): boolean {
+    return field.kind === 'object'
+  }
+
+  process(
+    field: DMMF.Field,
+    fields: DMMF.Field[],
+    modelName?: string,
+    isEditForm?: boolean,
+  ): string {
+    return generateRelationField(field, fields, isEditForm, modelName)
+  }
+}
+
+class ScalarFieldStrategy implements FieldStrategy {
+  shouldProcess(field: DMMF.Field, fields: DMMF.Field[]): boolean {
+    return (
+      field.kind === 'scalar' &&
+      !fields.some((f) => f.relationFromFields?.includes(field.name)) &&
+      !IGNORED_FIELDS.includes(field.name)
+    )
+  }
+
+  process(
+    field: DMMF.Field,
+    fields: DMMF.Field[],
+    modelName?: string,
+    isEditForm?: boolean,
+  ): string {
+    return generateScalarField(field, isEditForm, modelName)
+  }
 }
 
 export function mapFieldsToFormInputs(
   fields: DMMF.Field[],
-  modelNameToEdit?: string,
+  modelName?: string,
+  isEditForm?: boolean,
 ) {
-  return fields
-    .filter((field) => !IGNORED_FIELDS.includes(field.name))
-    .reduce((result, field) => {
-      if (field.relationName) return result
+  const strategies: FieldStrategy[] = [
+    new ObjectFieldStrategy(),
+    new ScalarFieldStrategy(),
+  ]
 
-      if (field.type === 'Boolean') {
-        return (
-          result +
-          `<div>
-          <Input
-            type="checkbox"
-            label="${fieldToCapitalizedLabel(field.name)}"
-            name="${field.name}"
-            className="mb-2"
-            ${
-              !!modelNameToEdit
-                ? `defaultChecked={${modelNameToEdit}.${field.name}}`
-                : ''
-            }
-            ${field.isRequired ? 'required' : ''}
-          />
-        </div>`
-        )
+  return fields.reduce((result, field) => {
+    for (const strategy of strategies) {
+      if (strategy.shouldProcess(field, fields)) {
+        return result + strategy.process(field, fields, modelName, isEditForm)
       }
+    }
 
-      if (field.type === 'DateTime') {
-        return (
-          result +
-          `<div>
-          <Input
-            type="datetime-local"
-            label="${fieldToCapitalizedLabel(field.name)}"
-            name="${field.name}"
-            className="mb-2"
-            ${
-              !!modelNameToEdit
-                ? `defaultValue={new Date(${modelNameToEdit}.${field.name}).toISOString().slice(0,16)}`
-                : ''
-            }
-            ${field.isRequired ? 'required' : ''}
-          />
-        </div>`
-        )
-      }
-
-      const type = typeMap[field.type as keyof typeof typeMap]
-
-      if (!type) return result
-
-      return (
-        result +
-        `<div>
-        <Input
-          type="${type}"
-          label="${fieldToCapitalizedLabel(field.name)}"
-          name="${field.name}"
-          className="mb-2"
-          ${
-            !!modelNameToEdit
-              ? `defaultValue={${modelNameToEdit}.${field.name}}`
-              : ''
-          }
-          ${field.isRequired ? 'required' : ''}
-        />
-      </div>`
-      )
-    }, '')
+    return result
+  }, '')
 }
