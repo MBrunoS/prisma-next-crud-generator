@@ -15,3 +15,7 @@ export function fieldToCapitalizedLabel(str: string): string {
 export function pluralize(str: string): string {
   return pluralizePkg.plural(str)
 }
+
+export function singularize(str: string): string {
+  return pluralizePkg.singular(str)
+}
