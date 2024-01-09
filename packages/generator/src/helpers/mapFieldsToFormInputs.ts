@@ -5,12 +5,7 @@ import { generateScalarField } from './generateScalarField'
 
 interface FieldStrategy {
   shouldProcess(field: DMMF.Field, fields: DMMF.Field[]): boolean
-  process(
-    field: DMMF.Field,
-    fields: DMMF.Field[],
-    modelName?: string,
-    isEditForm?: boolean,
-  ): string
+  process(field: DMMF.Field, modelName?: string, isEditForm?: boolean): string
 }
 
 class ObjectFieldStrategy implements FieldStrategy {
@@ -18,12 +13,7 @@ class ObjectFieldStrategy implements FieldStrategy {
     return field.kind === 'object'
   }
 
-  process(
-    field: DMMF.Field,
-    fields: DMMF.Field[],
-    modelName?: string,
-    isEditForm?: boolean,
-  ): string {
+  process(field: DMMF.Field, modelName?: string, isEditForm?: boolean): string {
     return generateRelationField(field, isEditForm, modelName)
   }
 }
@@ -37,12 +27,7 @@ class ScalarFieldStrategy implements FieldStrategy {
     )
   }
 
-  process(
-    field: DMMF.Field,
-    fields: DMMF.Field[],
-    modelName?: string,
-    isEditForm?: boolean,
-  ): string {
+  process(field: DMMF.Field, modelName?: string, isEditForm?: boolean): string {
     return generateScalarField(field, isEditForm, modelName)
   }
 }
@@ -60,7 +45,7 @@ export function mapFieldsToFormInputs(
   return fields.reduce((result, field) => {
     for (const strategy of strategies) {
       if (strategy.shouldProcess(field, fields)) {
-        return result + strategy.process(field, fields, modelName, isEditForm)
+        return result + strategy.process(field, modelName, isEditForm)
       }
     }
 
