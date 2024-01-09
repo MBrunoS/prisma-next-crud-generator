@@ -1,13 +1,29 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
-import { pluralize } from '../utils/strings'
+import { pluralize, singularize } from '../utils/strings'
 
 export const edit = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
   const modelNameLowerPlural = pluralize(modelNameLower)
-  const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower)
-  const idField = fields.find((field) => field.name === 'id')
+  const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower, true)
+  const idField = fields.find((field) => field.isId)
   const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
+
+  const hasRelations = fields.some((field) => field.kind === 'object')
+  const relationsNames = fields
+    .filter((field) => field.kind === 'object')
+    .map((field) => field.name)
+
+  const relationsQueries = relationsNames.reduce(
+    (result, relationName) =>
+      result +
+      `
+    const ${relationName} = await prisma.${singularize(
+      relationName,
+    )}.findMany();
+  `,
+    '',
+  )
 
   return `
   import Link from 'next/link';
@@ -19,8 +35,18 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
 
   export default async function ${modelName}EditPage({ params }: { params: { id: string } }) {
     const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
-      where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} }
+      where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} },
+      ${
+        hasRelations
+          ? `include: {
+        ${relationsNames.map((name) => name + ': true').join(',\n')}
+      }
+      `
+          : ''
+      }
     });
+
+    ${hasRelations ? relationsQueries : ''}
     
     if (!${modelNameLower}) {
       return (
