@@ -76,7 +76,7 @@ function editPageTemplate(
     ${hasRelations ? relationsQueries : ''}
     
     if (!${modelNameLower}) {
-      return ${renderModelNotFound(modelName, modelNameLowerPlural)}
+      return (${renderModelNotFound(modelName, modelNameLowerPlural)})
     }
 
     return (

@@ -1,7 +1,7 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToShowData } from '../helpers/mapFieldsToShowData'
 import { pluralize } from '../utils/strings'
-import { renderModelNotFound } from 'src/helpers/common/renderModelNotFound'
+import { renderModelNotFound } from '../helpers/common/renderModelNotFound'
 
 export const show = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLower = modelName.toLowerCase()
@@ -21,7 +21,7 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
     });
     
     if (!${modelNameLower}) {
-      return ${renderModelNotFound(modelNameLower, modelNameLowerPlural)}
+      return (${renderModelNotFound(modelNameLower, modelNameLowerPlural)})
     }
 
     return (

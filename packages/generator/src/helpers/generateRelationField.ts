@@ -1,31 +1,45 @@
 import { DMMF } from '@prisma/generator-helper'
-import { fieldToCapitalizedLabel } from '../utils/strings'
+import { fieldToCapitalizedLabel, pluralize } from '../utils/strings'
 
 export function generateRelationField(
   field: DMMF.Field,
-  fields: DMMF.Field[],
   isEditForm?: boolean,
   modelName?: string,
 ) {
   return `<div>
+    ${renderSelect(field, isEditForm, modelName)}
+  </div>`
+}
+
+function renderSelect(
+  field: DMMF.Field,
+  isEditForm?: boolean,
+  modelName?: string,
+) {
+  const defaultValue = isEditForm
+    ? `defaultValue={${modelName}.${field.name}${
+        field.isList ? '.map((item) => item.id)' : '?.id'
+      }}`
+    : ''
+  const required = field.isRequired ? 'required' : ''
+  const disabled = field.isReadOnly ? 'disabled' : ''
+  const multiple = field.isList ? 'multiple' : ''
+
+  return `
     <select
       name="${field.name}"
       className="mb-2"
-      ${field.isList ? 'multiple' : ''}
-      ${
-        isEditForm
-          ? `defaultValue={${modelName}.${field.name}.map((item) => item.id)}`
-          : ''
-      }
-      ${field.isRequired ? 'required' : ''}
-      ${field.isReadOnly ? 'disabled' : ''}
+      ${defaultValue}
+      ${required}
+      ${disabled}
+      ${multiple}
     >
       <option value="">Select ${fieldToCapitalizedLabel(field.name)}</option>
-      {${field.name}.map((item) => (
+      {${pluralize(field.name)}.map((item) => (
         <option key={item.id} value={item.id}>
           {item.id}
         </option>
       ))}
     </select>
-  </div>`
+  `
 }
