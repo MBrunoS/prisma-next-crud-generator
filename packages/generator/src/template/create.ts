@@ -7,22 +7,41 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   const modelNameLowerPlural = pluralize(modelNameLower)
   const fieldsInput = mapFieldsToFormInputs(fields)
 
-  const hasRelations = fields.some((field) => field.kind === 'object')
   const relationsNames = fields
     .filter((field) => field.kind === 'object')
     .map((field) => field.name)
 
-  const relationsQueries = relationsNames.reduce(
+  const relationsQueries = generateRelationsQueries(relationsNames)
+
+  return createPageTemplate(
+    modelName,
+    modelNameLower,
+    modelNameLowerPlural,
+    fieldsInput,
+    relationsQueries,
+  )
+}
+
+function generateRelationsQueries(relationsNames: string[]) {
+  return relationsNames.reduce(
     (result, relationName) =>
       result +
       `
-    const ${relationName} = await prisma.${singularize(
+    const ${pluralize(relationName)} = await prisma.${singularize(
       relationName,
     )}.findMany();
   `,
     '',
   )
+}
 
+function createPageTemplate(
+  modelName: string,
+  modelNameLower: string,
+  modelNameLowerPlural: string,
+  fieldsInput: string,
+  relationsQueries: string,
+) {
   return `
   import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
@@ -32,7 +51,7 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
   import { Button } from '@/components/ui/Button';
   
   export default async function ${modelName}CreatePage() {
-    ${hasRelations ? relationsQueries : ''}
+    ${relationsQueries}
     return (
       <>
         <header className="mb-4">

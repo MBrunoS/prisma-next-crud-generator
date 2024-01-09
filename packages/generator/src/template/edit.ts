@@ -1,5 +1,6 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
+import { renderModelNotFound } from '../helpers/common/renderModelNotFound'
 import { pluralize, singularize } from '../utils/strings'
 
 export const edit = (modelName: string, fields: DMMF.Field[]) => {
@@ -14,17 +15,43 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
     .filter((field) => field.kind === 'object')
     .map((field) => field.name)
 
-  const relationsQueries = relationsNames.reduce(
+  const relationsQueries = generateRelationsQueries(relationsNames)
+
+  return editPageTemplate(
+    modelName,
+    modelNameLower,
+    modelNameLowerPlural,
+    fieldsInput,
+    isIdNumber,
+    hasRelations,
+    relationsNames,
+    relationsQueries,
+  )
+}
+
+function generateRelationsQueries(relationsNames: string[]) {
+  return relationsNames.reduce(
     (result, relationName) =>
       result +
       `
-    const ${relationName} = await prisma.${singularize(
+    const ${pluralize(relationName)} = await prisma.${singularize(
       relationName,
     )}.findMany();
   `,
     '',
   )
+}
 
+function editPageTemplate(
+  modelName: string,
+  modelNameLower: string,
+  modelNameLowerPlural: string,
+  fieldsInput: string,
+  isIdNumber: boolean,
+  hasRelations: boolean,
+  relationsNames: string[],
+  relationsQueries: string,
+) {
   return `
   import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
@@ -49,18 +76,7 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
     ${hasRelations ? relationsQueries : ''}
     
     if (!${modelNameLower}) {
-      return (
-        <>
-          <header>
-            <Heading>${modelName} not found</Heading>
-          </header>
-          <footer>
-            <Link href="/${modelNameLowerPlural}">
-              Return to ${modelNameLowerPlural} list
-            </Link>
-          </footer>
-        </>
-      )
+      return ${renderModelNotFound(modelName, modelNameLowerPlural)}
     }
 
     return (

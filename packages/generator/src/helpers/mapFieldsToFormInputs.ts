@@ -24,7 +24,7 @@ class ObjectFieldStrategy implements FieldStrategy {
     modelName?: string,
     isEditForm?: boolean,
   ): string {
-    return generateRelationField(field, fields, isEditForm, modelName)
+    return generateRelationField(field, isEditForm, modelName)
   }
 }
 
