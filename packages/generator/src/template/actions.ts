@@ -1,10 +1,15 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormData } from '../helpers/mapFieldsToFormData'
-import { pluralize } from '../utils/strings'
+import {
+  pascalToCamelCase,
+  pascalToSnakeCase,
+  pluralize,
+} from '../utils/strings'
 
 export const actions = (modelName: string, fields: DMMF.Field[]) => {
-  const modelNameLower = modelName.toLowerCase()
-  const modelNameLowerPlural = pluralize(modelNameLower)
+  const modelNameCamelCase = pascalToCamelCase(modelName)
+  const modelNameSnakeCase = pascalToSnakeCase(modelName)
+  const modelNameSnakeCasePlural = pluralize(modelNameSnakeCase)
   const formDataFields = mapFieldsToFormData(fields)
   const idField = fields.find((field) => field.name === 'id')
   const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
@@ -20,10 +25,10 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       ${formDataFields}
     }
     
-    const ${modelNameLower} = await prisma.${modelNameLower}.create({ data });
+    const ${modelNameCamelCase} = await prisma.${modelNameCamelCase}.create({ data });
 
-    if (${modelNameLower}) {
-      redirect(\`/${modelNameLowerPlural}/\${${modelNameLower}.id}\`)
+    if (${modelNameCamelCase}) {
+      redirect(\`/${modelNameSnakeCasePlural}/\${${modelNameCamelCase}.id}\`)
     }
   }
 
@@ -33,8 +38,8 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       const data = {
         ${formDataFields}
       }
-
-      await prisma.${modelNameLower}.update({
+      
+      await prisma.${modelNameCamelCase}.update({
         where: { ${isIdNumber ? 'id: Number(id)' : 'id'} },
         data,
       })
@@ -43,21 +48,21 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
       return { message: error }
     }
 
-    redirect(\`/${modelNameLowerPlural}/\${id}\`)
+    redirect(\`/${modelNameSnakeCasePlural}/\${id}\`)
   }
 
   export async function delete${modelName} (formData: FormData) {
     const id = formData.get('id') as string;
     try {
-      await prisma.${modelNameLower}.delete({
+      await prisma.${modelNameCamelCase}.delete({
         where: { ${isIdNumber ? 'id: Number(id)' : 'id'} },
       });
     } catch (error) {
       console.error('DELETE ACTION ERROR:', error);
-      return { message: 'Unable to delete ${modelNameLower}' };
+      return { message: 'Unable to delete ${modelNameCamelCase}' };
     }
 
-    revalidatePath(\`/${modelNameLowerPlural}\`)
+    revalidatePath(\`/${modelNameSnakeCasePlural}\`)
   }
   `
 }

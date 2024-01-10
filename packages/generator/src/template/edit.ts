@@ -1,26 +1,31 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
-import { renderModelNotFound } from '../helpers/common/renderModelNotFound'
-import { pluralize, singularize } from '../utils/strings'
+import { renderModelNotFound } from '../utils/renderModelNotFound'
+import {
+  pascalCaseToSpaces,
+  pascalToCamelCase,
+  pascalToSnakeCase,
+  pluralize,
+  singularize,
+} from '../utils/strings'
 
 export const edit = (modelName: string, fields: DMMF.Field[]) => {
-  const modelNameLower = modelName.toLowerCase()
-  const modelNameLowerPlural = pluralize(modelNameLower)
-  const fieldsInput = mapFieldsToFormInputs(fields, modelNameLower, true)
+  const modelNameCamelCase = pascalToCamelCase(modelName)
+  const fieldsInput = mapFieldsToFormInputs(fields, modelNameCamelCase, true)
   const idField = fields.find((field) => field.isId)
   const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
   const hasRelations = fields.some((field) => field.kind === 'object')
-  const relationsNames = fields
+  const relations = fields
     .filter((field) => field.kind === 'object')
-    .map((field) => field.name)
+    .map((field) => ({ name: field.name, type: field.type }))
 
-  const relationsQueries = generateRelationsQueries(relationsNames)
+  const relationsNames = relations.map((relation) => relation.name)
+
+  const relationsQueries = generateRelationsQueries(relations)
 
   return editPageTemplate(
     modelName,
-    modelNameLower,
-    modelNameLowerPlural,
     fieldsInput,
     isIdNumber,
     hasRelations,
@@ -29,14 +34,15 @@ export const edit = (modelName: string, fields: DMMF.Field[]) => {
   )
 }
 
-function generateRelationsQueries(relationsNames: string[]) {
-  return relationsNames.reduce(
-    (result, relationName) =>
+function generateRelationsQueries(relations: { name: string; type: string }[]) {
+  return relations.reduce(
+    (result, relation) =>
       result +
       `
-    const ${pluralize(relationName)} = await prisma.${singularize(
-      relationName,
-    )}.findMany();
+    
+      const ${pluralize(relation.name)} = await prisma.${singularize(
+        pascalToCamelCase(relation.type),
+      )}.findMany();
   `,
     '',
   )
@@ -44,24 +50,27 @@ function generateRelationsQueries(relationsNames: string[]) {
 
 function editPageTemplate(
   modelName: string,
-  modelNameLower: string,
-  modelNameLowerPlural: string,
   fieldsInput: string,
   isIdNumber: boolean,
   hasRelations: boolean,
   relationsNames: string[],
   relationsQueries: string,
 ) {
+  const modelNameSpacedPlural = pluralize(pascalCaseToSpaces(modelName))
+  const modelNameCamelCase = pascalToCamelCase(modelName)
+  const modelNameSnakeCase = pascalToSnakeCase(modelName)
+  const modelNameSnakeCasePlural = pluralize(modelNameSnakeCase)
+
   return `
   import Link from 'next/link';
   import { prisma } from '@/lib/prisma';
-  import { edit${modelName} } from '@/actions/${modelNameLower}';
+  import { edit${modelName} } from '@/actions/${modelNameSnakeCase}';
   import { Input } from '@/components/ui/Input';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
 
   export default async function ${modelName}EditPage({ params }: { params: { id: string } }) {
-    const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
+    const ${modelNameCamelCase} = await prisma.${modelNameCamelCase}.findUnique({
       where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} },
       ${
         hasRelations
@@ -75,8 +84,8 @@ function editPageTemplate(
 
     ${hasRelations ? relationsQueries : ''}
     
-    if (!${modelNameLower}) {
-      return (${renderModelNotFound(modelName, modelNameLowerPlural)})
+    if (!${modelNameCamelCase}) {
+      return (${renderModelNotFound(modelName)})
     }
 
     return (
@@ -87,14 +96,14 @@ function editPageTemplate(
         <form action={edit${modelName}} className="px-2 max-w-xl">
           ${fieldsInput}
 
-          <input type="hidden" name="id" value={${modelNameLower}.id} />
+          <input type="hidden" name="id" value={${modelNameCamelCase}.id} />
 
           <footer className="flex items-center justify-between mt-2">
             <Link
-              href="/${modelNameLowerPlural}"
+              href="/${modelNameSnakeCasePlural}"
               className="underline text-gray-500"
             >
-              Return to ${modelNameLowerPlural} list
+              Return to ${modelNameSpacedPlural} list
             </Link>
   
             <Button

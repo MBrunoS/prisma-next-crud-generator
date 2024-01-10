@@ -1,28 +1,37 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToTableData } from '../helpers/mapFieldsToTableData'
 import { mapFieldsToTableTitles } from '../helpers/mapFieldsToTableTitles'
-import { pluralize } from '../utils/strings'
+import {
+  pascalCaseToSpaces,
+  pascalToCamelCase,
+  pascalToSnakeCase,
+  pluralize,
+} from '../utils/strings'
 
 export const list = ({ name: modelName, fields }: DMMF.Model) => {
-  const modelNameLower = modelName.toLowerCase()
   const modelNamePlural = pluralize(modelName)
-  const modelNameLowerPlural = pluralize(modelNameLower)
+  const modelNameSpaced = pascalCaseToSpaces(modelName)
+  const modelNameSpacedPlural = pascalCaseToSpaces(modelNamePlural)
+  const modelNameCamelCase = pascalToCamelCase(modelName)
+  const modelNameCamelCasePlural = pluralize(modelNameCamelCase)
+  const modelNameSnakeCase = pascalToSnakeCase(modelName)
+  const modelNameSnakeCasePlural = pluralize(modelNameSnakeCase)
   const tableTitles = mapFieldsToTableTitles(fields)
-  const tableData = mapFieldsToTableData(modelNameLower, fields)
+  const tableData = mapFieldsToTableData(modelNameCamelCase, fields)
 
   return `
   import { prisma } from '@/lib/prisma';
-  import { delete${modelName} } from '@/actions/${modelNameLower}';
+  import { delete${modelName} } from '@/actions/${modelNameSnakeCase}';
   import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
 
   export default async function ${modelNamePlural}ListPage() {
-    const ${modelNameLowerPlural} = await prisma.${modelNameLower}.findMany();
+    const ${modelNameCamelCasePlural} = await prisma.${modelNameCamelCase}.findMany();
 
     const breadcrumbs = [
       { name: 'Dashboard', href: '/' },
-      { name: '${modelNamePlural}', href: '#' }
+      { name: '${modelNameSpacedPlural}', href: '#' }
     ]
 
     return (
@@ -30,13 +39,13 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
         <Breadcrumbs elements={breadcrumbs} className="my-2" />
 
         <header className="flex justify-between mb-4">
-          <Heading>All ${modelNamePlural}</Heading>
+          <Heading>All ${modelNameSpacedPlural}</Heading>
           <Button
             as="a"
-            href="/${modelNameLowerPlural}/create"
+            href="/${modelNameSnakeCasePlural}/create"
             className="font-medium"
           >
-           New ${modelNameLower}
+           New ${modelNameSpaced}
           </Button>
         </header>
 
@@ -49,22 +58,22 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {${modelNameLowerPlural}.length === 0 && (
+              {${modelNameCamelCasePlural}.length === 0 && (
                 <tr>
                   <td colSpan={${fields.length}} className="text-center text-gray-500 py-4">
-                    No ${modelNameLowerPlural} found
+                    No ${modelNameCamelCasePlural} found
                   </td>
                 </tr>
               )}
 
-              {${modelNameLowerPlural}.map((${modelNameLower}) => (
-                <tr key={${modelNameLower}.id}>
+              {${modelNameCamelCasePlural}.map((${modelNameCamelCase}) => (
+                <tr key={${modelNameCamelCase}.id}>
                   ${tableData}
                   <td className="px-4 py-2">
                     <div className="flex gap-x-1 h-full justify-center">
                       <Button
                         as="a"
-                        href={\`/${modelNameLowerPlural}/\${${modelNameLower}.id}\`}
+                        href={\`/${modelNameSnakeCasePlural}/\${${modelNameCamelCase}.id}\`}
                         variant="ghost"
                         size="sm"
                         className="font-medium"
@@ -73,7 +82,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                       </Button>
                       <Button
                         as="a"
-                        href={\`/${modelNameLowerPlural}/\${${modelNameLower}.id}/edit\`}
+                        href={\`/${modelNameSnakeCasePlural}/\${${modelNameCamelCase}.id}/edit\`}
                         variant="ghost"
                         size="sm"
                         className="font-medium"
@@ -81,7 +90,7 @@ export const list = ({ name: modelName, fields }: DMMF.Model) => {
                         Edit
                       </Button>
                       <form action={delete${modelName}} className="inline-block">
-                        <input type="hidden" name="id" value={${modelNameLower}.id} />
+                        <input type="hidden" name="id" value={${modelNameCamelCase}.id} />
                         <Button
                           type="submit"
                           variant="ghost"

@@ -1,12 +1,19 @@
 import { DMMF } from '@prisma/generator-helper'
 import { mapFieldsToShowData } from '../helpers/mapFieldsToShowData'
-import { pluralize } from '../utils/strings'
-import { renderModelNotFound } from '../helpers/common/renderModelNotFound'
+import {
+  pascalCaseToSpaces,
+  pascalToCamelCase,
+  pascalToSnakeCase,
+  pluralize,
+} from '../utils/strings'
+import { renderModelNotFound } from '../utils/renderModelNotFound'
 
 export const show = (modelName: string, fields: DMMF.Field[]) => {
-  const modelNameLower = modelName.toLowerCase()
-  const modelNameLowerPlural = pluralize(modelNameLower)
-  const fieldsList = mapFieldsToShowData(modelNameLower, fields)
+  const modelNameSpaced = pascalCaseToSpaces(modelName)
+  const modelNameSpacedPlural = pluralize(modelNameSpaced)
+  const modelNameCamelCase = pascalToCamelCase(modelName)
+  const modelNameSnakeCasePlural = pluralize(pascalToSnakeCase(modelName))
+  const fieldsList = mapFieldsToShowData(modelNameCamelCase, fields)
   const idField = fields.find((field) => field.name === 'id')
   const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
@@ -16,21 +23,21 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
   import { Heading } from '@/components/ui/Heading';
 
   export default async function ${modelName}Page({ params }: { params: { id: string } }) {
-    const ${modelNameLower} = await prisma.${modelNameLower}.findUnique({
+    const ${modelNameCamelCase} = await prisma.${modelNameCamelCase}.findUnique({
       where: { id: ${isIdNumber ? 'Number(params.id)' : 'params.id'} }
     });
     
-    if (!${modelNameLower}) {
-      return (${renderModelNotFound(modelNameLower, modelNameLowerPlural)})
+    if (!${modelNameCamelCase}) {
+      return (${renderModelNotFound(modelName)})
     }
 
     return (
       <>
         <header className="mt-2 mb-4">
-          <Heading>${modelName} #${
+          <Heading>${modelNameSpaced} #${
             isIdNumber
-              ? `{${modelNameLower}.id}`
-              : `{${modelNameLower}.id.substring(0,6)}...`
+              ? `{${modelNameCamelCase}.id}`
+              : `{${modelNameCamelCase}.id.substring(0,6)}...`
           }</Heading>
         </header>
 
@@ -43,10 +50,10 @@ export const show = (modelName: string, fields: DMMF.Field[]) => {
 
         <footer>
           <Link
-            href="/${modelNameLowerPlural}"
+            href="/${modelNameSnakeCasePlural}"
             className="underline text-gray-500"
           >
-            Return to ${modelNameLowerPlural} list
+            Return to ${modelNameSpacedPlural} list
           </Link>
         </footer>
       </>

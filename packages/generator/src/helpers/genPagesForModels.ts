@@ -14,7 +14,7 @@ import { heading } from '../template/components/ui/heading'
 import { button } from '../template/components/ui/button'
 import { breadcrumbs } from '../template/components/ui/breadcrumbs'
 import { actions } from '../template/actions'
-import { pluralize } from '../utils/strings'
+import { pascalToSnakeCase, pluralize } from '../utils/strings'
 
 export async function genPagesForModels(models: DMMF.Model[], output: string) {
   const appPath = path.join(output, 'app')
@@ -37,8 +37,8 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
   ])
 
   for (const model of models) {
-    const modelNameLower = model.name.toLowerCase()
-    const modelNameLowerPlural = pluralize(modelNameLower)
+    const modelNameSnakeCase = pascalToSnakeCase(model.name)
+    const modelNameSnakeCasePlural = pluralize(modelNameSnakeCase)
 
     const indexFile = list(model)
     const showFile = show(model.name, model.fields)
@@ -48,21 +48,21 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
 
     await Promise.all([
       writeFileSafely(
-        path.join(appPath, `${modelNameLowerPlural}`, 'page.tsx'),
+        path.join(appPath, `${modelNameSnakeCasePlural}`, 'page.tsx'),
         indexFile,
       ),
       writeFileSafely(
-        path.join(appPath, `${modelNameLowerPlural}`, 'create', 'page.tsx'),
+        path.join(appPath, `${modelNameSnakeCasePlural}`, 'create', 'page.tsx'),
         createFile,
       ),
       writeFileSafely(
-        path.join(appPath, `${modelNameLowerPlural}`, '[id]', 'page.tsx'),
+        path.join(appPath, `${modelNameSnakeCasePlural}`, '[id]', 'page.tsx'),
         showFile,
       ),
       writeFileSafely(
         path.join(
           appPath,
-          `${modelNameLowerPlural}`,
+          `${modelNameSnakeCasePlural}`,
           '[id]',
           'edit',
           'page.tsx',
@@ -70,7 +70,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
         editFile,
       ),
       writeFileSafely(
-        path.join(actionsPath, `${modelNameLower}.ts`),
+        path.join(actionsPath, `${modelNameSnakeCase}.ts`),
         actionsFile,
       ),
     ])
