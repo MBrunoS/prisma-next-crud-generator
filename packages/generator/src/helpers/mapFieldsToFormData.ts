@@ -11,9 +11,18 @@ const typeMap = {
 
 export function mapFieldsToFormData(fields: DMMF.Field[]) {
   return fields
-    .filter((field) => !IGNORED_FIELDS.includes(field.name))
+    .filter(
+      (field) =>
+        !isRelationScalar(field, fields) &&
+        !IGNORED_FIELDS.includes(field.name),
+    )
     .reduce((result, field) => {
-      if (field.relationName) return result
+      if (field.kind === 'object') {
+        return (
+          result +
+          `${field.name}: formData.get('${field.name}') != '' ? { connect: { id: formData.get('${field.name}') as string } } : undefined,\n`
+        )
+      }
 
       if (field.type === 'Boolean') {
         return (
@@ -36,4 +45,11 @@ export function mapFieldsToFormData(fields: DMMF.Field[]) {
         result + `${field.name}: formData.get('${field.name}') as ${type},\n`
       )
     }, '')
+}
+
+function isRelationScalar(field: DMMF.Field, fields: DMMF.Field[]) {
+  return (
+    field.kind === 'scalar' &&
+    fields.some((f) => f.relationFromFields?.includes(field.name))
+  )
 }
