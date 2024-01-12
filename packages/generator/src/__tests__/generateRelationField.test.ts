@@ -22,8 +22,7 @@ describe('generateRelationField', () => {
   it('should generate select element correctly', () => {
     const result = generateRelationField(field)
     expect(result).toContain('<div>')
-    expect(result).toContain('<select')
-    expect(result).toContain('</select>')
+    expect(result).toContain('<Select')
   })
 
   it('should generate field name correctly', () => {
@@ -42,20 +41,20 @@ describe('generateRelationField', () => {
 
   it('should generate select with disabled attribute only when field is read only', () => {
     const result = generateRelationField(field)
-    expect(result).not.toContain('disabled')
+    expect(result).not.toContain('isDisabled')
 
     field.isReadOnly = true
     const result2 = generateRelationField(field)
-    expect(result2).toContain('disabled')
+    expect(result2).toContain('isDisabled')
   })
 
   it('should generate select with multiple attribute only when field is list', () => {
     const result = generateRelationField(field)
-    expect(result).not.toContain('multiple')
+    expect(result).not.toContain('isMulti')
 
     field.isList = true
     const result2 = generateRelationField(field)
-    expect(result2).toContain('multiple')
+    expect(result2).toContain('isMulti')
   })
 
   it('should generate select with default value only when isEditForm is true', () => {
@@ -67,29 +66,19 @@ describe('generateRelationField', () => {
     expect(result2).toContain(`defaultValue={${modelName}.testField`)
   })
 
-  it('should generate select with pluralized field name in map function', () => {
+  it('should generate select with pluralized field name in options', () => {
     const result = generateRelationField(field)
-    expect(result).toContain('{testFields.map')
+    expect(result).toContain('options={testFields.map')
   })
 
-  it('should generate select with capitalized field name in option label', () => {
+  it('should generate select with capitalized field name placeholder', () => {
     const result = generateRelationField(field)
-    expect(result).toContain(`Select ${field.name[0].toUpperCase()}`)
+    expect(result).toContain(`placeholder="Select Test Field"`)
   })
 
-  it('should generate select with capitalized field name in option value', () => {
+  it('should generate select with option value and label', () => {
     const result = generateRelationField(field)
-    expect(result).toContain('{testField.id}')
-  })
-
-  it('should generate select with capitalized field name in option key', () => {
-    const result = generateRelationField(field)
-    expect(result).toContain('key={testField.id}')
-  })
-
-  it('should generate select with capitalized field name in option value when field is list', () => {
-    field.isList = true
-    const result = generateRelationField(field)
-    expect(result).toContain('{testField.id}')
+    expect(result).toContain('label: testField.id')
+    expect(result).toContain('value: testField.id')
   })
 })

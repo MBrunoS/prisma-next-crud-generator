@@ -68,6 +68,7 @@ function editPageTemplate(
   import { Input } from '@/components/ui/Input';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
+  ${hasRelations ? `import { Select } from '@/components/ui/Select';` : ''}
 
   export default async function ${modelName}EditPage({ params }: { params: { id: string } }) {
     const ${modelNameCamelCase} = await prisma.${modelNameCamelCase}.findUnique({

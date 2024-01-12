@@ -22,24 +22,22 @@ function renderSelect(
       }}`
     : ''
   const required = field.isRequired ? 'required' : ''
-  const disabled = field.isReadOnly ? 'disabled' : ''
-  const multiple = field.isList ? 'multiple' : ''
+  const disabled = field.isReadOnly ? 'isDisabled' : ''
+  const multiple = field.isList ? 'isMulti' : ''
 
   return `
-    <select
+    <Select
       name="${field.name}"
       className="mb-2"
+      placeholder="Select ${fieldToCapitalizedLabel(field.name)}"
       ${defaultValue}
       ${required}
       ${disabled}
       ${multiple}
-    >
-      <option value="">Select ${fieldToCapitalizedLabel(field.name)}</option>
-      {${pluralize(field.name)}.map((${field.name}) => (
-        <option key={${field.name}.id} value={${field.name}.id}>
-          {${field.name}.id}
-        </option>
-      ))}
-    </select>
+      options={${pluralize(field.name)}.map((${field.name}) => ({
+        label: ${field.name}.id,
+        value: ${field.name}.id,
+      }))}
+    />
   `
 }

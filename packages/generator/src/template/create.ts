@@ -16,8 +16,14 @@ export const create = (modelName: string, fields: DMMF.Field[]) => {
     .map((field) => ({ name: field.name, type: field.type }))
 
   const relationsQueries = generateRelationsQueries(relations)
+  const hasRelations = relations.length > 0
 
-  return createPageTemplate(modelName, fieldsInput, relationsQueries)
+  return createPageTemplate(
+    modelName,
+    fieldsInput,
+    relationsQueries,
+    hasRelations,
+  )
 }
 
 function generateRelationsQueries(relations: { name: string; type: string }[]) {
@@ -37,6 +43,7 @@ function createPageTemplate(
   modelName: string,
   fieldsInput: string,
   relationsQueries: string,
+  hasRelations: boolean,
 ) {
   const modelNameSpacedPlural = pluralize(pascalCaseToSpaces(modelName))
   const modelNameSnakeCase = pascalToSnakeCase(modelName)
@@ -49,6 +56,7 @@ function createPageTemplate(
   import { Input } from '@/components/ui/Input';
   import { Heading } from '@/components/ui/Heading';
   import { Button } from '@/components/ui/Button';
+  ${hasRelations ? `import { Select } from '@/components/ui/Select';` : ''}
   
   export default async function ${modelName}CreatePage() {
     ${relationsQueries}

@@ -13,6 +13,7 @@ import { input } from '../template/components/ui/input'
 import { heading } from '../template/components/ui/heading'
 import { button } from '../template/components/ui/button'
 import { breadcrumbs } from '../template/components/ui/breadcrumbs'
+import { select } from '../template/components/ui/select'
 import { actions } from '../template/actions'
 import { pascalToSnakeCase, pluralize } from '../utils/strings'
 
@@ -34,6 +35,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
       path.join(componentsPath, 'ui', 'Breadcrumbs.tsx'),
       breadcrumbs,
     ),
+    writeFileSafely(path.join(componentsPath, 'ui', 'Select.tsx'), select),
   ])
 
   for (const model of models) {
