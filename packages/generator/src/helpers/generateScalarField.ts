@@ -34,7 +34,7 @@ function renderInput(
   modelName?: string,
 ) {
   let value = `${modelName}.${field.name}`
-  const checked = `${modelName}.${field.name}`
+  const checked = `${modelName}.${field.name} === true`
 
   if (isEditForm && type === 'datetime-local') {
     value = `new Date(${modelName}.${field.name}).toISOString().slice(0,16)`
