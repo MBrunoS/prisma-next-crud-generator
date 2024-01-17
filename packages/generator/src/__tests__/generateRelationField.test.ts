@@ -63,7 +63,7 @@ describe('generateRelationField', () => {
 
     const modelName = 'testModel'
     const result2 = generateRelationField(field, true, modelName)
-    expect(result2).toContain(`defaultValue={${modelName}.testField`)
+    expect(result2).toContain(`defaultValue={{ label: ${modelName}.testField`)
   })
 
   it('should generate select with pluralized field name in options', () => {

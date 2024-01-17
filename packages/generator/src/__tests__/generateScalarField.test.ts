@@ -61,7 +61,7 @@ describe('generateScalarField', () => {
 
     const result2 = generateScalarField(field, true, 'modelName')
     expect(result2).toContain('type="checkbox"')
-    expect(result2).toContain('defaultChecked={modelName.testField}')
+    expect(result2).toContain('defaultChecked={modelName.testField === true}')
   })
 
   it('should generate Input with correct parameters when field is datetime-local', () => {
