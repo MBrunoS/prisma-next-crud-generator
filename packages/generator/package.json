@@ -5,7 +5,7 @@
   "main": "dist/generator.js",
   "license": "MIT",
   "bin": {
-    "next-crud-generator": "dist/bin.js"
+    "prisma-next-crud-generator": "dist/bin.js"
   },
   "engines": {
     "node": ">=14.0"
