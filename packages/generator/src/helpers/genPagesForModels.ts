@@ -46,7 +46,7 @@ export async function genPagesForModels(models: DMMF.Model[], output: string) {
     const showFile = show(model.name, model.fields)
     const createFile = create(model.name, model.fields)
     const editFile = edit(model.name, model.fields)
-    const actionsFile = actions(model.name, model.fields)
+    const actionsFile = actions(model.name, model.fields, models)
 
     await Promise.all([
       writeFileSafely(

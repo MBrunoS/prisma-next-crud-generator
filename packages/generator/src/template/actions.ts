@@ -6,11 +6,16 @@ import {
   pluralize,
 } from '../utils/strings'
 
-export const actions = (modelName: string, fields: DMMF.Field[]) => {
+export const actions = (
+  modelName: string,
+  fields: DMMF.Field[],
+  models: DMMF.Model[],
+) => {
   const modelNameCamelCase = pascalToCamelCase(modelName)
   const modelNameSnakeCase = pascalToSnakeCase(modelName)
   const modelNameSnakeCasePlural = pluralize(modelNameSnakeCase)
-  const formDataFields = mapFieldsToFormData(fields)
+  const formDataCreateFields = mapFieldsToFormData(fields, models)
+  const formDataEditFields = mapFieldsToFormData(fields, models, true)
   const idField = fields.find((field) => field.name === 'id')
   const isIdNumber = idField?.type === 'Int' || idField?.type === 'BigInt'
 
@@ -22,7 +27,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
 
   export async function create${modelName}(formData: FormData) {
     const data = {
-      ${formDataFields}
+      ${formDataCreateFields}
     }
     
     const ${modelNameCamelCase} = await prisma.${modelNameCamelCase}.create({ data });
@@ -36,7 +41,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
     const id = formData.get('id') as string
     try {
       const data = {
-        ${formDataFields}
+        ${formDataEditFields}
       }
       
       await prisma.${modelNameCamelCase}.update({
@@ -44,7 +49,7 @@ export const actions = (modelName: string, fields: DMMF.Field[]) => {
         data,
       })
     } catch (error) {
-      console.error('EDIT ACTION ERROR:', error)
+      console.error('[EDIT ACTION ERROR:', error)
       return { message: error }
     }
 
