@@ -6,8 +6,8 @@
 
 ## Requirements
 
-- Prisma
-- Next.js with [Server Actions enabled](https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#enabling-server-actions-v13)
+- Minimal [Next.js](https://nextjs.org/docs/getting-started/installation) project with [Server Actions enabled](https://nextjs.org/docs/app/api-reference/next-config-js/serverActions#enabling-server-actions-v13)
+- [Prisma](https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project) installed and configured
 - [Tailwind CSS Forms plugin](https://github.com/tailwindlabs/tailwindcss-forms)
 - [Tailwind Merge](https://github.com/dcastil/tailwind-merge) for handling class merging
 
@@ -27,7 +27,7 @@ generator client {
 }
 
 generator next_crud {
-  provider = "prisma-next-crud-generator"
+  provider = "npx prisma-next-crud-generator"
 }
 
 model User {
@@ -47,6 +47,7 @@ model Product {
   updatedAt             DateTime @updatedAt
 }
 ```
+
 **Note:** `id`, `createdAt`, `updatedAt` and `deletedAt` fields are ignored by the generator in list pages and form inputs. The `id` is used in the `show` and `edit` pages, supporting Int, BigInt and String types.
 
 ### 3. Run `npx prisma generate`

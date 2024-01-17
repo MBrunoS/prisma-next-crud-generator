@@ -3,7 +3,7 @@ generator client {
 }
 
 generator next_crud_generator {
-  provider = "prisma-next-crud-generator"
+  provider = "npx prisma-next-crud-generator"
   output   = "../src"
 }
 
