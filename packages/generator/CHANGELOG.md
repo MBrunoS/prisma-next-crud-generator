@@ -1,3 +1,20 @@
+# [1.3.0](https://github.com/MBrunoS/prisma-next-crud-generator//compare/v1.2.0...v1.3.0) (2024-01-17)
+
+
+### Bug Fixes
+
+* solve rendering issues in generateRelationField and generateScalarField ([027da15](https://github.com/MBrunoS/prisma-next-crud-generator//commit/027da15f1689897660a0527703bb1b6b4f01f9f9))
+* solve tests errors ([455a4cd](https://github.com/MBrunoS/prisma-next-crud-generator//commit/455a4cd5fa94cc9f01e0ddfb5663864534cad6fd))
+* update input field generation ([8ceb464](https://github.com/MBrunoS/prisma-next-crud-generator//commit/8ceb46464e0b62acb444dad058dd690bc0672702))
+
+
+### Features
+
+* add label to select component ([bd4fa12](https://github.com/MBrunoS/prisma-next-crud-generator//commit/bd4fa1227d9910aae138c7374883e55613c6c561))
+* add Select component using react-select ([09bbac7](https://github.com/MBrunoS/prisma-next-crud-generator//commit/09bbac736e7dee7108f53a95027bbce99fe5890e))
+* add singularize function to strings.ts ([f7310be](https://github.com/MBrunoS/prisma-next-crud-generator//commit/f7310bec3fdb86190d29f51781218864c9f773a6))
+* handle relation fields in mapFieldsToFormData ([f37e972](https://github.com/MBrunoS/prisma-next-crud-generator//commit/f37e97279335d8f0d193fbc9b4555b23d3b2e641))
+
 # [1.2.0](https://github.com/MBrunoS/prisma-next-crud-generator//compare/v1.1.0...v1.2.0) (2023-12-08)
 
 
