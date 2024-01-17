@@ -28,7 +28,8 @@ function renderSelect(
   return `
     <Select
       name="${field.name}"
-      className="mb-2"
+      className="mt-1 mb-2"
+      label="${fieldToCapitalizedLabel(field.name)}"
       placeholder="Select ${fieldToCapitalizedLabel(field.name)}"
       ${defaultValue}
       ${required}
