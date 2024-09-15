@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from '@jest/globals'
+import { describe, expect, it, beforeEach } from 'vitest'
 import { DMMF } from '@prisma/generator-helper'
 import { generateRelationField } from '../helpers/generateRelationField'
 

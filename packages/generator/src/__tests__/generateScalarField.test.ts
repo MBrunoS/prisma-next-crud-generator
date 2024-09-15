@@ -1,6 +1,6 @@
 import { DMMF } from '@prisma/generator-helper'
 import { generateScalarField } from '../helpers/generateScalarField'
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { fieldToCapitalizedLabel } from '../utils/strings'
 
 describe('generateScalarField', () => {
