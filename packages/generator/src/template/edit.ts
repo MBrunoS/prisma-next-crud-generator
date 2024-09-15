@@ -1,4 +1,4 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
 import { renderModelNotFound } from '../utils/renderModelNotFound'
 import {
@@ -9,7 +9,7 @@ import {
   singularize,
 } from '../utils/strings'
 
-export const edit = (modelName: string, fields: DMMF.Field[]) => {
+export const edit = (modelName: string, fields: ReadonlyDeep<DMMF.Field[]>) => {
   const modelNameCamelCase = pascalToCamelCase(modelName)
   const fieldsInput = mapFieldsToFormInputs(fields, modelNameCamelCase, true)
   const idField = fields.find((field) => field.isId)

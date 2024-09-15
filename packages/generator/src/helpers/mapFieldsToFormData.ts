@@ -1,4 +1,4 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { IGNORED_FIELDS } from '../utils/ignoredFields'
 import { singularize } from '../utils/strings'
 
@@ -11,8 +11,8 @@ const typeMap = {
 }
 
 export function mapFieldsToFormData(
-  fields: DMMF.Field[],
-  models: DMMF.Model[],
+  fields: ReadonlyDeep<DMMF.Field[]>,
+  models: ReadonlyDeep<DMMF.Model[]>,
   isEditForm = false,
 ) {
   return fields
@@ -57,7 +57,7 @@ function generateObjectField(
   formDataValue: string,
   isList: boolean,
   isEditForm: boolean,
-  models: DMMF.Model[],
+  models: ReadonlyDeep<DMMF.Model[]>,
 ) {
   return isList
     ? handleListField(field, formDataValue, isEditForm, models)
@@ -68,7 +68,7 @@ function handleListField(
   field: DMMF.Field,
   formDataValue: string,
   isEditForm: boolean,
-  models: DMMF.Model[],
+  models: ReadonlyDeep<DMMF.Model[]>,
 ) {
   const isRelationRequiredFromOtherSide = models
     .find((model) => model.name === field.type)
@@ -106,7 +106,7 @@ function handleSingleField(
   field: DMMF.Field,
   formDataValue: string,
   isEditForm: boolean,
-  models: DMMF.Model[],
+  models: ReadonlyDeep<DMMF.Model[]>,
 ) {
   const relationIdFieldType = models
     .find((model) => model.name === field.type)
@@ -137,7 +137,7 @@ function generateDefaultField(
   return `${field.name}: ${formDataValue} as ${type},\n`
 }
 
-function isRelationScalar(field: DMMF.Field, fields: DMMF.Field[]) {
+function isRelationScalar(field: ReadonlyDeep<DMMF.Field>, fields: ReadonlyDeep<DMMF.Field[]>) {
   return (
     field.kind === 'scalar' &&
     fields.some((f) => f.relationFromFields?.includes(field.name))

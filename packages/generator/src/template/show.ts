@@ -1,4 +1,4 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { mapFieldsToShowData } from '../helpers/mapFieldsToShowData'
 import {
   pascalCaseToSpaces,
@@ -8,7 +8,7 @@ import {
 } from '../utils/strings'
 import { renderModelNotFound } from '../utils/renderModelNotFound'
 
-export const show = (modelName: string, fields: DMMF.Field[]) => {
+export const show = (modelName: string, fields: ReadonlyDeep<DMMF.Field[]>) => {
   const modelNameSpaced = pascalCaseToSpaces(modelName)
   const modelNameSpacedPlural = pluralize(modelNameSpaced)
   const modelNameCamelCase = pascalToCamelCase(modelName)
