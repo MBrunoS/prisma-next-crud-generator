@@ -1,4 +1,4 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { mapFieldsToFormData } from '../helpers/mapFieldsToFormData'
 import {
   pascalToCamelCase,
@@ -8,8 +8,8 @@ import {
 
 export const actions = (
   modelName: string,
-  fields: DMMF.Field[],
-  models: DMMF.Model[],
+  fields: ReadonlyDeep<DMMF.Field[]>,
+  models: ReadonlyDeep<DMMF.Model[]>,
 ) => {
   const modelNameCamelCase = pascalToCamelCase(modelName)
   const modelNameSnakeCase = pascalToSnakeCase(modelName)

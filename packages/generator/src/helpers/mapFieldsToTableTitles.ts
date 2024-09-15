@@ -1,8 +1,8 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { fieldToCapitalizedLabel } from '../utils/strings'
 import { IGNORED_FIELDS } from '../utils/ignoredFields'
 
-export function mapFieldsToTableTitles(fields: DMMF.Field[]) {
+export function mapFieldsToTableTitles(fields: ReadonlyDeep<DMMF.Field[]>) {
   return fields
     .filter((field) => !IGNORED_FIELDS.includes(field.name))
     .reduce((result, field) => {

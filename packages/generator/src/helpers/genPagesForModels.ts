@@ -1,5 +1,5 @@
 import path from 'path'
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { layout } from '../template/layout'
 import { dashboard } from '../template/dashboard'
 import { list } from '../template/list'
@@ -17,7 +17,7 @@ import { select } from '../template/components/ui/select'
 import { actions } from '../template/actions'
 import { pascalToSnakeCase, pluralize } from '../utils/strings'
 
-export async function genPagesForModels(models: DMMF.Model[], output: string) {
+export async function genPagesForModels(models: ReadonlyDeep<DMMF.Model[]>, output: string) {
   const appPath = path.join(output, 'app')
   const componentsPath = path.join(output, 'components')
   const actionsPath = path.join(output, 'actions')

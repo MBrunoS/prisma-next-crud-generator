@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from '@jest/globals'
+import { describe, expect, it, beforeEach } from 'vitest'
 import { DMMF } from '@prisma/generator-helper'
 import { generateRelationField } from '../helpers/generateRelationField'
 
@@ -34,8 +34,10 @@ describe('generateRelationField', () => {
     const result = generateRelationField(field)
     expect(result).not.toContain('required')
 
-    field.isRequired = true
-    const result2 = generateRelationField(field)
+    const result2 = generateRelationField({
+      ...field,
+      isRequired: true,
+    })
     expect(result2).toContain('required')
   })
 
@@ -43,8 +45,10 @@ describe('generateRelationField', () => {
     const result = generateRelationField(field)
     expect(result).not.toContain('isDisabled')
 
-    field.isReadOnly = true
-    const result2 = generateRelationField(field)
+    const result2 = generateRelationField({
+      ...field,
+      isReadOnly: true,
+    })
     expect(result2).toContain('isDisabled')
   })
 
@@ -52,8 +56,10 @@ describe('generateRelationField', () => {
     const result = generateRelationField(field)
     expect(result).not.toContain('isMulti')
 
-    field.isList = true
-    const result2 = generateRelationField(field)
+    const result2 = generateRelationField({
+      ...field,
+      isList: true,
+    })
     expect(result2).toContain('isMulti')
   })
 

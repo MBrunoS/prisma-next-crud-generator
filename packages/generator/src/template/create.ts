@@ -1,4 +1,4 @@
-import { DMMF } from '@prisma/generator-helper'
+import { DMMF, ReadonlyDeep } from '@prisma/generator-helper'
 import { mapFieldsToFormInputs } from '../helpers/mapFieldsToFormInputs'
 import {
   pascalCaseToSpaces,
@@ -8,7 +8,7 @@ import {
   singularize,
 } from '../utils/strings'
 
-export const create = (modelName: string, fields: DMMF.Field[]) => {
+export const create = (modelName: string, fields: ReadonlyDeep<DMMF.Field[]>) => {
   const fieldsInput = mapFieldsToFormInputs(fields)
 
   const relations = fields

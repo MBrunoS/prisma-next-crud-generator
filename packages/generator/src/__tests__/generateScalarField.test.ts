@@ -1,6 +1,6 @@
 import { DMMF } from '@prisma/generator-helper'
 import { generateScalarField } from '../helpers/generateScalarField'
-import { beforeEach, describe, expect, it } from '@jest/globals'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { fieldToCapitalizedLabel } from '../utils/strings'
 
 describe('generateScalarField', () => {
@@ -21,8 +21,10 @@ describe('generateScalarField', () => {
   })
 
   it('should return empty string if type is not in typeMap', () => {
-    field.type = 'UnknownType'
-    const result = generateScalarField(field)
+    const result = generateScalarField({
+      ...field,
+      type: 'UnknownType'
+    })
     expect(result).toBe('')
   })
 
@@ -41,37 +43,46 @@ describe('generateScalarField', () => {
   })
 
   it('should generate Input with correct attributes when field is required', () => {
-    field.isRequired = true
-    const result = generateScalarField(field)
+    const result = generateScalarField({
+      ...field,
+      isRequired: true
+    })
     expect(result).toContain('required')
   })
 
   it('should generate Input with correct parameters when field is read only', () => {
-    field.isReadOnly = true
-    const result = generateScalarField(field)
+    const result = generateScalarField({
+      ...field,
+      isReadOnly: true
+    })
     expect(result).toContain('disabled')
   })
 
   it('should generate Input with correct parameters when field is checkbox', () => {
-    field.type = 'Boolean'
-
-    const result = generateScalarField(field)
+    const _field = {
+      ...field,
+      type: 'Boolean'
+    }
+    const result = generateScalarField(_field)
     expect(result).toContain('type="checkbox"')
     expect(result).not.toContain('defaultChecked')
 
-    const result2 = generateScalarField(field, true, 'modelName')
+    const result2 = generateScalarField(_field, true, 'modelName')
     expect(result2).toContain('type="checkbox"')
     expect(result2).toContain('defaultChecked={modelName.testField === true}')
   })
 
   it('should generate Input with correct parameters when field is datetime-local', () => {
-    field.type = 'DateTime'
+    const _field = {
+      ...field,
+      type: 'DateTime'
+    }
 
-    const result = generateScalarField(field)
+    const result = generateScalarField(_field)
     expect(result).toContain('type="datetime-local"')
     expect(result).not.toContain('defaultValue')
 
-    const result2 = generateScalarField(field, true, 'modelName')
+    const result2 = generateScalarField(_field, true, 'modelName')
     expect(result2).toContain('type="datetime-local"')
     expect(result2).toContain(
       'defaultValue={new Date(modelName.testField).toISOString().slice(0,16)}',

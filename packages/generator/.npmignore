@@ -2,7 +2,7 @@ src
 node_modules
 tsconfig.json
 README.md
-jest.config.js
+vitest.config.ts
 yarn.lock
 yarn-error.log
 .pnpm-debug.log
