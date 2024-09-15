@@ -38,7 +38,7 @@
   "homepage": "https://github.com/MBrunoS/prisma-next-crud-generator",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MBrunoS/prisma-next-crud-generator/"
+    "url": "https://github.com/MBrunoS/prisma-next-crud-generator"
   },
   "author": "Maurício Bruno <contact@mbrunos.dev>",
   "keywords": [
